@@ -20,9 +20,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); line-height: 1.5; }
-    a { color: inherit; text-decoration: none; }
 
-    /* Nav */
     nav {
       display: flex; justify-content: space-between; align-items: center;
       padding: 18px 6%; border-bottom: 1px solid var(--border);
@@ -32,7 +30,6 @@
     .brand-badge { background: var(--accent); color: #042f2e; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-size: 0.85rem; }
     .nav-actions { display: flex; gap: 12px; align-items: center; }
 
-    /* Buttons */
     .btn {
       padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
       cursor: pointer; border: 1px solid transparent; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 8px;
@@ -41,19 +38,17 @@
     .btn-primary:hover { background: var(--accent-hover); }
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { background: var(--surface-2); }
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-sm { padding: 6px 11px; font-size: 0.78rem; }
 
-    /* Hero */
-    .hero { padding: 64px 6% 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .hero { padding: 56px 6% 36px; max-width: 1200px; margin: 0 auto; text-align: center; }
     .pill {
       display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
       background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 18px;
     }
-    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.3rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 16px; line-height: 1.15; }
-    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 680px; margin: 0 auto 28px; }
+    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 16px; line-height: 1.15; }
+    .hero p { color: var(--muted); font-size: 1.08rem; max-width: 680px; margin: 0 auto 26px; }
     .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-    /* Sandbox Container */
     .container { max-width: 1200px; margin: 0 auto 80px; padding: 0 6%; }
     .dashboard-shell {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
@@ -67,7 +62,6 @@
     .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
     .dash-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
-    /* KPI Grid */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; padding: 24px; }
     .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
     .kpi-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
@@ -77,7 +71,6 @@
     .val-red { color: var(--danger); }
     .val-amber { color: var(--warning); }
 
-    /* Tabs */
     .tabs { display: flex; gap: 8px; padding: 0 24px; border-bottom: 1px solid var(--border); }
     .tab {
       padding: 12px 16px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer;
@@ -85,18 +78,26 @@
     }
     .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* Table */
     .table-wrap { padding: 20px 24px 28px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
     th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 10px 12px; border-bottom: 1px solid var(--border); }
     td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
+    .action-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* Expandable User Drawer Row */
+    .user-drawer-row td { background: var(--bg); padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .user-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .user-drawer-header span { font-size: 0.82rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; }
+    .sub-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    .sub-table th { padding: 7px 10px; font-size: 0.72rem; border-bottom: 1px solid var(--border); }
+    .sub-table td { padding: 8px 10px; border-bottom: 1px solid rgba(38, 49, 71, 0.5); }
+    .sub-table tr:last-child td { border-bottom: none; }
+
     .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
     .badge-high { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
     .badge-med { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
     .badge-low { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
 
-    /* Modal */
     .modal-backdrop {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 100;
       align-items: center; justify-content: center; padding: 20px;
@@ -104,7 +105,7 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      width: 100%; max-width: 520px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      width: 100%; max-width: 560px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
     }
     .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
     .modal p { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
@@ -122,11 +123,10 @@
     .error-msg { color: #fca5a5; font-size: 0.82rem; margin-bottom: 12px; display: none; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
-    /* Ticket Drawer Output */
     pre.ticket-box {
       background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem;
-      white-space: pre-wrap; color: #e2e8f0; margin-top: 10px;
+      white-space: pre-wrap; color: #e2e8f0; margin-top: 10px; max-height: 320px; overflow-y: auto;
     }
   </style>
 </head>
@@ -146,7 +146,7 @@
   <section class="hero">
     <div class="pill">Read-Only Microsoft Graph + Card Spend Audit</div>
     <h1>Stop Paying for Unused M365 Seats &amp; Unapproved Shadow AI</h1>
-    <p>Connect your Entra ID tenant in 2 minutes using strictly read-only permissions to pinpoint dormant E3/E5/Copilot licenses and risky third-party OAuth apps.</p>
+    <p>Pinpoint dormant E3/E5/Copilot licenses down to the exact employee email and revoke risky third-party OAuth apps in minutes.</p>
     <div class="hero-cta">
       <button class="btn btn-primary" onclick="openConnectModal()">Run Live Entra ID Scan</button>
       <label class="btn btn-outline" style="cursor:pointer;">
@@ -164,7 +164,7 @@
           <span id="workspaceLabel">Interactive Sandbox — Acme Logistics (240 Employees)</span>
         </div>
         <div class="dash-controls">
-          <button class="btn btn-outline btn-sm" onclick="exportCsvReport()">Export CFO Summary CSV</button>
+          <button class="btn btn-outline btn-sm" onclick="exportCsvReport()">Export CFO + User CSV</button>
         </div>
       </div>
 
@@ -175,9 +175,9 @@
           <div class="kpi-sub" id="kpiMonthly">$0 / month recoverable</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Inactive / Zombie Licenses</div>
+          <div class="kpi-label">Reclaimable Seats / Lines</div>
           <div class="kpi-val" id="kpiSeats">0</div>
-          <div class="kpi-sub">45+ days inactive or disabled</div>
+          <div class="kpi-sub">Click "View Users" to inspect</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Shadow AI &amp; OAuth Risks</div>
@@ -204,7 +204,7 @@
               <th>Detection Signal</th>
               <th>Affected Seats</th>
               <th>Annual Waste</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="tbodySpend"></tbody>
@@ -265,7 +265,7 @@
   <div class="modal-backdrop" id="ticketModal">
     <div class="modal">
       <h3>IT Remediation Ticket</h3>
-      <p>Copy and paste directly into ServiceNow, Jira, Freshservice, or your IT queue.</p>
+      <p>Includes exact affected user emails so IT can reclaim licenses immediately.</p>
       <pre class="ticket-box" id="ticketContent"></pre>
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="document.getElementById('ticketModal').classList.remove('open')">Close</button>
@@ -280,6 +280,7 @@
     let state = {
       spend: [],
       shadow: [],
+      expandedRows: {},
       totalUsers: 240,
       modeLabel: "Sample Tenant Data"
     };
@@ -290,24 +291,28 @@
       spend: [
         {
           vendor: "Microsoft 365 E5",
-          signal: "14 licensed user(s) inactive 45+ days (6 disabled)",
-          seats: "14 @ $57/mo",
-          annual: 9576,
-          ticket: "Subject: Reclaim 14 Inactive Microsoft 365 E5 Licenses ($9,576/yr)\n\nAction: Remove or downgrade SKU in Entra Admin Center."
+          signal: "4 licensed user(s) inactive 45+ days (2 disabled)",
+          seats: "4 @ $57/mo",
+          annual: 2736,
+          users: [
+            { name: "Marcus Vance", upn: "mvance@acmelogistics.com", department: "Operations", status: "Account Disabled", last_signin: "2026-08-14" },
+            { name: "Elena Rostova", upn: "erostova@acmelogistics.com", department: "Finance", status: "Inactive 74d", last_signin: "2026-09-11" },
+            { name: "Devon Brooks", upn: "dbrooks@acmelogistics.com", department: "Sales", status: "Account Disabled", last_signin: "2026-07-29" },
+            { name: "Hannah Kim", upn: "hkim@acmelogistics.com", department: "Marketing", status: "Inactive 58d", last_signin: "2026-09-27" }
+          ],
+          ticket: "Subject: Reclaim 4 Unused Microsoft 365 E5 Licenses ($2,736/yr)\n\nAffected Users to Revoke:\n- Marcus Vance (mvance@acmelogistics.com) | Operations | Account Disabled\n- Elena Rostova (erostova@acmelogistics.com) | Finance | Inactive 74d\n- Devon Brooks (dbrooks@acmelogistics.com) | Sales | Account Disabled\n- Hannah Kim (hkim@acmelogistics.com) | Marketing | Inactive 58d\n\nAction: Remove or downgrade SKU in Entra Admin Center."
         },
         {
           vendor: "Microsoft 365 Copilot",
-          signal: "9 licensed user(s) inactive 45+ days (2 disabled)",
-          seats: "9 @ $30/mo",
-          annual: 3240,
-          ticket: "Subject: Reclaim 9 Unused Microsoft 365 Copilot Licenses ($3,240/yr)\n\nAction: Reassign Copilot seats to active power users."
-        },
-        {
-          vendor: "ZOOM.US (Duplicate)",
-          signal: "3 separate recurring corporate card charges",
-          seats: "3 line(s)",
-          annual: 4320,
-          ticket: "Subject: Consolidate Duplicate Zoom Subscriptions ($4,320/yr)\n\nAction: Merge 3 separate departmental cards into single Enterprise billing."
+          signal: "3 licensed user(s) inactive 45+ days (1 disabled)",
+          seats: "3 @ $30/mo",
+          annual: 1080,
+          users: [
+            { name: "Trevor Jenkins", upn: "tjenkins@acmelogistics.com", department: "Logistics", status: "Inactive 63d", last_signin: "2026-09-22" },
+            { name: "Priya Nair", upn: "pnair@acmelogistics.com", department: "HR", status: "Account Disabled", last_signin: "2026-08-03" },
+            { name: "Samir Patel", upn: "spatel@acmelogistics.com", department: "Procurement", status: "Inactive 51d", last_signin: "2026-10-04" }
+          ],
+          ticket: "Subject: Reclaim 3 Unused Microsoft 365 Copilot Licenses ($1,080/yr)\n\nAffected Users to Revoke:\n- Trevor Jenkins (tjenkins@acmelogistics.com) | Logistics | Inactive 63d\n- Priya Nair (pnair@acmelogistics.com) | HR | Account Disabled\n- Samir Patel (spatel@acmelogistics.com) | Procurement | Inactive 51d\n\nAction: Reassign Copilot seats to active power users."
         }
       ],
       shadow: [
@@ -331,10 +336,11 @@
     function render() {
       const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
       const totalMonthly = Math.round(totalAnnual / 12);
+      const totalReclaimable = state.spend.reduce((acc, item) => acc + (item.users ? item.users.length : 1), 0);
 
       document.getElementById("kpiSavings").textContent = "$" + totalAnnual.toLocaleString();
       document.getElementById("kpiMonthly").textContent = "$" + totalMonthly.toLocaleString() + " / month recoverable";
-      document.getElementById("kpiSeats").textContent = state.spend.length + " categories";
+      document.getElementById("kpiSeats").textContent = totalReclaimable;
       document.getElementById("kpiShadow").textContent = state.shadow.length;
       document.getElementById("kpiUsers").textContent = state.totalUsers;
       document.getElementById("scanModeSub").textContent = state.modeLabel;
@@ -343,17 +349,69 @@
       document.getElementById("countShadow").textContent = state.shadow.length;
 
       const tbodySpend = document.getElementById("tbodySpend");
-      tbodySpend.innerHTML = state.spend.length === 0
-        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused licenses or spend anomalies found.</td></tr>`
-        : state.spend.map((item, idx) => `
-          <tr>
-            <td><strong>${escapeHtml(item.vendor)}</strong></td>
-            <td style="color:var(--muted);">${escapeHtml(item.signal)}</td>
-            <td>${escapeHtml(item.seats)}</td>
-            <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openTicket('spend', ${idx})">Generate Ticket</button></td>
-          </tr>
-        `).join("");
+      if (state.spend.length === 0) {
+        tbodySpend.innerHTML = `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused licenses or spend anomalies found.</td></tr>`;
+      } else {
+        tbodySpend.innerHTML = state.spend.map((item, idx) => {
+          const hasUsers = Array.isArray(item.users) && item.users.length > 0;
+          const isOpen = !!state.expandedRows[idx];
+          const viewBtn = hasUsers
+            ? `<button class="btn btn-outline btn-sm" onclick="toggleUserDrawer(${idx})">${isOpen ? "Hide" : "View"} Users (${item.users.length})</button>`
+            : "";
+
+          let drawerHtml = "";
+          if (hasUsers && isOpen) {
+            const userRows = item.users.map(u => `
+              <tr>
+                <td><strong>${escapeHtml(u.name)}</strong></td>
+                <td><code>${escapeHtml(u.upn)}</code></td>
+                <td style="color:var(--muted);">${escapeHtml(u.department)}</td>
+                <td><span class="badge ${u.status.includes("Disabled") ? "badge-high" : "badge-med"}">${escapeHtml(u.status)}</span></td>
+                <td style="color:var(--muted);">${escapeHtml(u.last_signin)}</td>
+              </tr>
+            `).join("");
+
+            drawerHtml = `
+              <tr class="user-drawer-row">
+                <td colspan="5">
+                  <div class="user-drawer-header">
+                    <span>Assigned Users Holding Unused ${escapeHtml(item.vendor)} Licenses</span>
+                    <button class="btn btn-outline btn-sm" onclick="copyUpnList(${idx})">Copy UPN / Email List</button>
+                  </div>
+                  <table class="sub-table">
+                    <thead>
+                      <tr>
+                        <th>Display Name</th>
+                        <th>Email / UPN</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Last Sign-In</th>
+                      </tr>
+                    </thead>
+                    <tbody>${userRows}</tbody>
+                  </table>
+                </td>
+              </tr>
+            `;
+          }
+
+          return `
+            <tr>
+              <td><strong>${escapeHtml(item.vendor)}</strong></td>
+              <td style="color:var(--muted);">${escapeHtml(item.signal)}</td>
+              <td>${escapeHtml(item.seats)}</td>
+              <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
+              <td>
+                <div class="action-cell">
+                  ${viewBtn}
+                  <button class="btn btn-outline btn-sm" onclick="openTicket('spend', ${idx})">Generate Ticket</button>
+                </div>
+              </td>
+            </tr>
+            ${drawerHtml}
+          `;
+        }).join("");
+      }
 
       const tbodyShadow = document.getElementById("tbodyShadow");
       tbodyShadow.innerHTML = state.shadow.length === 0
@@ -372,8 +430,25 @@
         }).join("");
     }
 
+    function toggleUserDrawer(idx) {
+      state.expandedRows[idx] = !state.expandedRows[idx];
+      render();
+    }
+
+    function copyUpnList(idx) {
+      const users = state.spend[idx]?.users || [];
+      const upns = users.map(u => u.upn).filter(Boolean).join("\n");
+      navigator.clipboard.writeText(upns);
+      alert(`Copied ${users.length} email/UPN address(es) to clipboard!`);
+    }
+
     function loadSampleData() {
-      state = JSON.parse(JSON.stringify(SAMPLE_DATA));
+      const copy = JSON.parse(JSON.stringify(SAMPLE_DATA));
+      state.spend = copy.spend;
+      state.shadow = copy.shadow;
+      state.totalUsers = copy.totalUsers;
+      state.modeLabel = copy.modeLabel;
+      state.expandedRows = { 0: true }; // Open first row by default so user list is immediately visible
       document.getElementById("workspaceLabel").textContent = "Interactive Sandbox — Acme Logistics (240 Employees)";
       render();
     }
@@ -427,6 +502,7 @@
         state.spend = data.spend || [];
         state.shadow = data.shadow || [];
         state.totalUsers = data.total_users || 0;
+        state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
         state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
 
         document.getElementById("workspaceLabel").textContent = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
@@ -466,6 +542,7 @@
             signal: d.count > 1 ? `${d.count} separate recurring card charges` : `Recurring $${d.monthly.toFixed(0)}/mo charge`,
             seats: `${d.count} line(s)`,
             annual,
+            users: [],
             ticket: `Subject: SaaS Spend Audit — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo.`
           };
         });
@@ -491,9 +568,20 @@
     }
 
     function exportCsvReport() {
-      const rows = [["Category", "Vendor_or_App", "Signal", "Seats_or_Scopes", "Annual_Waste_USD"]];
-      state.spend.forEach(s => rows.push(["License/Spend", s.vendor, s.signal, s.seats, s.annual]));
-      state.shadow.forEach(sh => rows.push(["Shadow AI/OAuth", sh.app, sh.user, sh.scopes, 0]));
+      const rows = [["Category", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Status", "Last_SignIn", "Annual_Waste_USD"]];
+      state.spend.forEach(s => {
+        if (Array.isArray(s.users) && s.users.length > 0) {
+          const perSeatAnnual = Math.round((Number(s.annual) || 0) / s.users.length);
+          s.users.forEach(u => {
+            rows.push(["Unused License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
+          });
+        } else {
+          rows.push(["Card SaaS Spend", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
+        }
+      });
+      state.shadow.forEach(sh => {
+        rows.push(["Shadow AI / OAuth", sh.app, sh.user, "", "", sh.scopes, "", 0]);
+      });
       const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
