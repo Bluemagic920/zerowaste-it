@@ -70,7 +70,6 @@
 
     .container { max-width: 1200px; margin: 0 auto 64px; padding: 0 6%; }
 
-    /* Lead Magnet ROI Calculator */
     .roi-card {
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(18, 24, 38, 0.98));
       border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; padding: 24px 28px;
@@ -130,11 +129,11 @@
     .sim-slider-wrap { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.82rem; }
     .sim-slider-wrap input[type="range"] { accent-color: var(--accent); cursor: pointer; }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; padding: 24px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px; }
     .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
-    .kpi-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-    .kpi-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
-    .kpi-sub { font-size: 0.79rem; color: var(--muted); margin-top: 4px; }
+    .kpi-label { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .kpi-val { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
+    .kpi-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
     .val-green { color: var(--accent); }
     .val-red { color: var(--danger); }
     .val-amber { color: var(--warning); }
@@ -167,7 +166,6 @@
     .badge-med { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
     .badge-low { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
 
-    /* Trust & Security Architecture Section */
     .trust-section { max-width: 1200px; margin: 0 auto 72px; padding: 0 6%; }
     .trust-box {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px;
@@ -301,7 +299,6 @@
   </section>
 
   <div class="container">
-    <!-- 60-Second SaaS Waste Estimator Lead Magnet -->
     <div class="roi-card" id="estimator">
       <div>
         <div class="roi-title">60-Second SaaS &amp; M365 Waste Estimator</div>
@@ -365,7 +362,7 @@
 
       <div class="simulator-bar">
         <div class="sim-group">
-          <span class="sim-label">What-If Simulator:</span>
+          <span class="sim-label">What-If License Simulator:</span>
           <select class="sim-select" id="simActionMode" onchange="render()">
             <option value="revoke">Full License Reclamation (100% Savings)</option>
             <option value="downgrade">Downgrade E5 &rarr; E3 ($21/mo Saved/Seat)</option>
@@ -381,23 +378,23 @@
 
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-label">Est. Annual Savings + Review</div>
+          <div class="kpi-label">Potential License Savings</div>
           <div class="kpi-val val-green" id="kpiSavings">$0</div>
-          <div class="kpi-sub" id="kpiMonthly">$0 / month potential</div>
+          <div class="kpi-sub" id="kpiMonthly">$0 / month from dormant seats</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Card Spend Under Review</div>
+          <div class="kpi-val val-amber" id="kpiCardReview">$0</div>
+          <div class="kpi-sub" id="kpiCardReviewSub">Flagged card lines (verify overlap)</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Disabled vs. Inactive Users</div>
           <div class="kpi-val val-blue" id="kpiTriage">0 / 0</div>
-          <div class="kpi-sub" id="kpiTriageSub">Check hold/retention before revoking</div>
+          <div class="kpi-sub">Check hold/retention before revoking</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Third-Party OAuth Grants</div>
           <div class="kpi-val val-red" id="kpiShadow">0</div>
-          <div class="kpi-sub">High-privilege app permissions</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Users Audited</div>
-          <div class="kpi-val val-amber" id="kpiUsers">240</div>
           <div class="kpi-sub" id="scanModeSub">Simulated Sample Data</div>
         </div>
       </div>
@@ -414,7 +411,7 @@
               <th>Vendor / License SKU</th>
               <th>Detection Signal &amp; Classification</th>
               <th>Affected Seats / Lines</th>
-              <th>Est. Annual Impact</th>
+              <th>Annual Impact</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -911,29 +908,38 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       const pct = (parseInt(document.getElementById("simPctSlider")?.value, 10) || 100) / 100;
       document.getElementById("simPctLabel").textContent = Math.round(pct * 100) + "%";
 
-      let rawAnnual = 0;
+      let rawLicenseAnnual = 0;
+      let cardReviewAnnual = 0;
+      let cardLineCount = 0;
       let disabledCount = 0;
       let inactiveActiveCount = 0;
 
       state.spend.forEach(item => {
         const users = Array.isArray(item.users) ? item.users : [];
-        const dUsers = users.filter(u => (u.status || "").includes("Disabled")).length;
-        const aUsers = Math.max(0, users.length - dUsers);
-        disabledCount += dUsers;
-        inactiveActiveCount += aUsers;
+        if (users.length > 0) {
+          const dUsers = users.filter(u => (u.status || "").includes("Disabled")).length;
+          const aUsers = Math.max(0, users.length - dUsers);
+          disabledCount += dUsers;
+          inactiveActiveCount += aUsers;
 
-        let itemAnnual = Number(item.annual) || 0;
-        if (mode === "downgrade" && (item.vendor || "").toLowerCase().includes("e5") && users.length > 0) {
-          itemAnnual = users.length * 21 * 12;
-        } else if (mode === "disabled_only") {
-          itemAnnual = users.length > 0 ? (itemAnnual / users.length) * dUsers : 0;
+          let itemAnnual = Number(item.annual) || 0;
+          if (mode === "downgrade" && (item.vendor || "").toLowerCase().includes("e5")) {
+            itemAnnual = users.length * 21 * 12;
+          } else if (mode === "disabled_only") {
+            itemAnnual = (itemAnnual / users.length) * dUsers;
+          }
+          rawLicenseAnnual += itemAnnual;
+        } else {
+          cardReviewAnnual += Number(item.annual) || 0;
+          cardLineCount += 1;
         }
-        rawAnnual += itemAnnual;
       });
 
       return {
-        annual: Math.round(rawAnnual * pct),
-        monthly: Math.round((rawAnnual * pct) / 12),
+        licenseAnnual: Math.round(rawLicenseAnnual * pct),
+        licenseMonthly: Math.round((rawLicenseAnnual * pct) / 12),
+        cardReviewAnnual: Math.round(cardReviewAnnual),
+        cardLineCount,
         disabledCount,
         inactiveActiveCount
       };
@@ -953,12 +959,13 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         const triageText = (s.users || []).length > 0
           ? `${safeCount} Disabled (Check Hold), ${reviewCount} Manager Review`
           : (s.classification || "Card Spend — Needs Verification");
+        const amtColor = (s.users || []).length > 0 ? "#059669" : "#d97706";
         return `
           <tr>
             <td><strong>${escapeHtml(s.vendor)}</strong></td>
             <td>${escapeHtml(s.signal)}</td>
             <td>${escapeHtml(triageText)}</td>
-            <td style="text-align:right;font-weight:700;color:#059669;">$${Number(s.annual).toLocaleString()}/yr</td>
+            <td style="text-align:right;font-weight:700;color:${amtColor};">$${Number(s.annual).toLocaleString()}/yr</td>
           </tr>
         `;
       }).join("");
@@ -983,7 +990,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         ".kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }",
         ".kpi { border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; }",
         ".kpi-title { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; }",
-        ".kpi-num { font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px; }",
+        ".kpi-num { font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px; }",
         "h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; margin: 22px 0 10px; }",
         "table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }",
         "th { background: #f1f5f9; text-align: left; padding: 9px 10px; border-bottom: 1px solid #cbd5e1; font-size: 11px; text-transform: uppercase; }",
@@ -993,13 +1000,13 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         `<div class="header"><div class="logo">ZeroWaste <span>IT</span> — Executive Audit Brief</div>`,
         `<div class="meta"><strong>${escapeHtml(state.workspaceName)}</strong><br/>Generated ${new Date().toLocaleDateString()} &bull; Users Audited: ${state.totalUsers}</div></div>`,
         `<div class="kpis">`,
-        `<div class="kpi"><div class="kpi-title">Est. Annual Impact</div><div class="kpi-num" style="color:#059669;">$${sim.annual.toLocaleString()}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Disabled Accounts</div><div class="kpi-num">${sim.disabledCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Inactive Accounts</div><div class="kpi-num">${sim.inactiveActiveCount}</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Potential License Savings</div><div class="kpi-num" style="color:#059669;">$${sim.licenseAnnual.toLocaleString()}/yr</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Card Spend Under Review</div><div class="kpi-num" style="color:#d97706;">$${sim.cardReviewAnnual.toLocaleString()}/yr</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Disabled / Inactive Seats</div><div class="kpi-num">${sim.disabledCount} / ${sim.inactiveActiveCount}</div></div>`,
         `<div class="kpi"><div class="kpi-title">OAuth App Grants</div><div class="kpi-num" style="color:#dc2626;">${state.shadow.length}</div></div>`,
         `</div>`,
-        `<h2>1. License &amp; Card Spend Findings (Confirmed &amp; Suspected)</h2>`,
-        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Classification / Triage</th><th style="text-align:right;">Est. Annual Impact</th></tr></thead>`,
+        `<h2>1. License Savings &amp; Card Spend Requiring Review</h2>`,
+        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Classification / Triage</th><th style="text-align:right;">Annual Amount</th></tr></thead>`,
         `<tbody>${spendRows || '<tr><td colspan="4">No license waste findings.</td></tr>'}</tbody></table>`,
         `<h2>2. Third-Party OAuth Application Permissions</h2>`,
         `<table><thead><tr><th>Connected Application</th><th>Granted Graph Scopes</th><th>Risk Level</th></tr></thead>`,
@@ -1123,7 +1130,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       btn.disabled = true;
       btn.textContent = "Saving...";
 
-      const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
+      const sim = computeSimulatedTotals();
       const totalReclaimable = state.spend.reduce((acc, item) => acc + (item.users ? item.users.length : 1), 0);
 
       const { error } = await sb.from("audit_scans").insert({
@@ -1131,7 +1138,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         workspace_name: state.workspaceName,
         scan_mode: state.modeLabel,
         total_users: state.totalUsers,
-        annual_savings: totalAnnual,
+        annual_savings: sim.licenseAnnual,
         reclaimable_seats: totalReclaimable,
         shadow_risks: state.shadow.length,
         spend_findings: state.spend,
@@ -1176,8 +1183,8 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       listEl.innerHTML = data.map((row, idx) => `
         <div class="history-item">
           <div class="history-meta">
-            <strong>${escapeHtml(row.workspace_name)} — $${Number(row.annual_savings).toLocaleString()}/yr</strong>
-            <span>${new Date(row.created_at).toLocaleString()} &bull; ${row.reclaimable_seats} seats &bull; ${row.shadow_risks} risks</span>
+            <strong>${escapeHtml(row.workspace_name)} — $${Number(row.annual_savings).toLocaleString()}/yr license savings</strong>
+            <span>${new Date(row.created_at).toLocaleString()} &bull; ${row.reclaimable_seats} seats/lines &bull; ${row.shadow_risks} OAuth grants</span>
           </div>
           <div style="display:flex;gap:8px;">
             <button class="btn btn-primary btn-sm" onclick="loadSavedScan(${idx})">Load</button>
@@ -1218,13 +1225,15 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         dot.classList.add("live");
       }
 
-      document.getElementById("kpiSavings").textContent = "$" + sim.annual.toLocaleString();
-      document.getElementById("kpiMonthly").textContent = "$" + sim.monthly.toLocaleString() + " / month potential";
+      document.getElementById("kpiSavings").textContent = "$" + sim.licenseAnnual.toLocaleString();
+      document.getElementById("kpiMonthly").textContent = "$" + sim.licenseMonthly.toLocaleString() + " / month from dormant seats";
+      document.getElementById("kpiCardReview").textContent = "$" + sim.cardReviewAnnual.toLocaleString();
+      document.getElementById("kpiCardReviewSub").textContent = sim.cardLineCount > 0
+        ? `${sim.cardLineCount} flagged vendor group(s) to verify`
+        : "Upload Card CSV to check overlaps";
       document.getElementById("kpiTriage").textContent = `${sim.disabledCount} Disabled / ${sim.inactiveActiveCount} Inactive`;
-      document.getElementById("kpiTriageSub").textContent = `Verify retention/holds before revoking`;
       document.getElementById("kpiShadow").textContent = state.shadow.length;
-      document.getElementById("kpiUsers").textContent = state.totalUsers;
-      document.getElementById("scanModeSub").textContent = state.modeLabel;
+      document.getElementById("scanModeSub").textContent = `${state.totalUsers} users · ${state.modeLabel}`;
 
       document.getElementById("countSpend").textContent = state.spend.length;
       document.getElementById("countShadow").textContent = state.shadow.length;
@@ -1246,6 +1255,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
           const classBadge = hasUsers
             ? `<span class="badge badge-safe">Dormant License</span>`
             : `<span class="badge badge-med">${escapeHtml(item.classification || "Needs Verification")}</span>`;
+          const amountClass = hasUsers ? "val-green" : "val-amber";
 
           let drawerHtml = "";
           if (hasUsers && isOpen) {
@@ -1297,7 +1307,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
               <td><strong>${escapeHtml(item.vendor)}</strong></td>
               <td style="color:var(--muted);">${classBadge} <span style="margin-left:6px;">${escapeHtml(item.signal)}</span></td>
               <td>${escapeHtml(item.seats)}</td>
-              <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
+              <td class="${amountClass}"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
               <td>
                 <div class="action-cell">
                   ${viewBtn}
@@ -1480,15 +1490,15 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
     }
 
     function exportCsvReport() {
-      const rows = [["Client_Workspace", "Category", "Classification", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Est_Annual_Impact_USD"]];
+      const rows = [["Client_Workspace", "Category", "Classification", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Annual_Amount_USD"]];
       state.spend.forEach(s => {
         if (Array.isArray(s.users) && s.users.length > 0) {
           const perSeatAnnual = Math.round((Number(s.annual) || 0) / s.users.length);
           s.users.forEach(u => {
-            rows.push([state.workspaceName, "Unused License", "Dormant License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
+            rows.push([state.workspaceName, "Potential License Savings", "Dormant License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
           });
         } else {
-          rows.push([state.workspaceName, "Card SaaS Spend", s.classification || "Needs Verification", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
+          rows.push([state.workspaceName, "Card Spend Under Review", s.classification || "Needs Verification", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
         }
       });
       state.shadow.forEach(sh => {
