@@ -96,15 +96,22 @@
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
     }
+    .demo-banner {
+      background: rgba(245, 158, 11, 0.14); border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde68a; padding: 10px 24px; font-size: 0.82rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .demo-banner strong { color: #fbbf24; text-transform: uppercase; letter-spacing: 0.04em; }
     .dash-topbar {
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
       padding: 16px 24px; background: var(--surface-2); border-bottom: 1px solid var(--border);
     }
     .dash-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; flex-wrap: wrap; }
-    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 8px var(--warning); }
+    .status-dot.live { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
     .client-input {
       background: var(--bg); border: 1px solid var(--border); color: var(--text);
-      padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 220px;
+      padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 240px;
     }
     .client-input:focus { outline: none; border-color: var(--accent); }
     .dash-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -126,7 +133,7 @@
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; padding: 24px; }
     .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
     .kpi-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-    .kpi-val { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; }
+    .kpi-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
     .kpi-sub { font-size: 0.79rem; color: var(--muted); margin-top: 4px; }
     .val-green { color: var(--accent); }
     .val-red { color: var(--danger); }
@@ -160,8 +167,22 @@
     .badge-med { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
     .badge-low { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
 
-    .pricing-section { max-width: 1200px; margin: 0 auto 90px; padding: 20px 6% 0; }
-    .pricing-header { text-align: center; max-width: 660px; margin: 0 auto 40px; }
+    /* Trust & Security Architecture Section */
+    .trust-section { max-width: 1200px; margin: 0 auto 72px; padding: 0 6%; }
+    .trust-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px;
+    }
+    .trust-header { margin-bottom: 22px; }
+    .trust-header h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 6px; }
+    .trust-header p { color: var(--muted); font-size: 0.92rem; }
+    .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .trust-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .trust-item h4 { font-size: 0.92rem; color: var(--accent); margin-bottom: 6px; }
+    .trust-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .trust-item code { color: #e2e8f0; font-size: 0.78rem; }
+
+    .pricing-section { max-width: 1200px; margin: 0 auto 90px; padding: 10px 6% 0; }
+    .pricing-header { text-align: center; max-width: 680px; margin: 0 auto 40px; }
     .pricing-header h2 { font-size: clamp(1.75rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
     .pricing-header p { color: var(--muted); font-size: 1rem; }
     .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; align-items: stretch; }
@@ -189,6 +210,8 @@
       border-top: 1px solid var(--border); padding: 28px 6%; text-align: center;
       color: var(--muted); font-size: 0.83rem;
     }
+    footer a { color: var(--accent); text-decoration: none; cursor: pointer; }
+    footer a:hover { text-decoration: underline; }
 
     .modal-backdrop {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 100;
@@ -251,6 +274,7 @@
     </div>
     <div class="nav-actions">
       <a href="#estimator" class="nav-link">ROI Calculator</a>
+      <a href="#security" class="nav-link">Security &amp; Permissions</a>
       <a href="#pricing" class="nav-link">Pricing</a>
       <span class="user-chip" id="userEmailChip" style="display:none;"></span>
       <button class="btn btn-outline btn-sm" id="btnHistory" style="display:none;" onclick="openHistoryModal()">Saved Audits</button>
@@ -271,7 +295,7 @@
         Upload Card CSV
         <input type="file" id="csvInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(event)" />
       </label>
-      <button class="btn btn-outline" onclick="loadSampleCardCsv()">Test Sample Card CSV</button>
+      <button class="btn btn-outline" onclick="loadSampleCardCsv()">Load Sample Card CSV</button>
       <a href="#pricing" class="btn btn-outline">View Plans</a>
     </div>
   </section>
@@ -281,7 +305,7 @@
     <div class="roi-card" id="estimator">
       <div>
         <div class="roi-title">60-Second SaaS &amp; M365 Waste Estimator</div>
-        <div class="roi-sub">No login or tenant credentials required. Estimate your annual recoverable spend and copy a ready-to-send CFO approval email.</div>
+        <div class="roi-sub">No login or tenant credentials required. Estimate potential annual recoverable spend and copy a CFO business-case email.</div>
         <div class="roi-sliders">
           <div class="roi-row">
             <div class="roi-row-head">
@@ -292,7 +316,7 @@
           </div>
           <div class="roi-row">
             <div class="roi-row-head">
-              <span>Premium M365 E5 / Copilot Add-On Seats</span>
+              <span>Premium M365 E5 ($57/mo) &amp; Copilot ($30/mo) Seats</span>
               <strong id="calcPremVal">60 seats</strong>
             </div>
             <input type="range" id="calcPrem" min="0" max="1000" step="10" value="60" oninput="updateRoiCalculator()" />
@@ -308,21 +332,28 @@
       </div>
 
       <div class="roi-result-box">
-        <div class="roi-result-label">Estimated Annual Recoverable Waste</div>
+        <div class="roi-result-label">Estimated Annual Recoverable Spend</div>
         <div class="roi-result-num" id="calcTotal">$18,480/yr</div>
-        <div class="roi-result-note" id="calcRoiNote">23x ROI vs. ZeroWaste IT Starter ($79/mo)</div>
+        <div class="roi-result-note" id="calcRoiNote">Projected savings vs. ZeroWaste IT Starter ($79/mo)</div>
         <div class="roi-result-actions">
-          <button class="btn btn-primary btn-block" onclick="openConnectModal()">Verify Free with Live Scan</button>
+          <button class="btn btn-primary btn-block" onclick="openConnectModal()">Verify with Live Entra Scan</button>
           <button class="btn btn-outline btn-block btn-sm" onclick="copyCfoApprovalEmail()">Copy CFO / Boss Approval Email</button>
         </div>
       </div>
     </div>
 
     <div class="dashboard-shell">
+      <div class="demo-banner" id="demoBanner">
+        <div>
+          <strong>Interactive Sample Sandbox:</strong> Displayed company ("Acme Logistics"), employee names, and dollar figures are simulated demo data. Connect Entra ID or upload a card CSV to audit real data.
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="openConnectModal()">Switch to Live Scan</button>
+      </div>
+
       <div class="dash-topbar">
         <div class="dash-title">
           <span class="status-dot" id="statusDot"></span>
-          <input type="text" class="client-input" id="workspaceInput" value="Acme Logistics (240 Employees)" onchange="updateWorkspaceName(this.value)" title="Edit client or company name for PDF/CSV exports" />
+          <input type="text" class="client-input" id="workspaceInput" value="Sample Tenant — Acme Logistics (240 Employees)" onchange="updateWorkspaceName(this.value)" title="Edit client or company name for PDF/CSV exports" />
         </div>
         <div class="dash-controls">
           <button class="btn btn-primary btn-sm" id="btnSaveScan" onclick="saveCurrentScan()">Save Audit</button>
@@ -338,7 +369,7 @@
           <select class="sim-select" id="simActionMode" onchange="render()">
             <option value="revoke">Full License Reclamation (100% Savings)</option>
             <option value="downgrade">Downgrade E5 &rarr; E3 ($21/mo Saved/Seat)</option>
-            <option value="disabled_only">Instant-Safe Only (Disabled Accounts)</option>
+            <option value="disabled_only">Disabled Accounts Only (Check Retention First)</option>
           </select>
         </div>
         <div class="sim-slider-wrap">
@@ -350,29 +381,29 @@
 
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-label">Simulated Annual Savings</div>
+          <div class="kpi-label">Est. Annual Savings + Review</div>
           <div class="kpi-val val-green" id="kpiSavings">$0</div>
-          <div class="kpi-sub" id="kpiMonthly">$0 / month recoverable</div>
+          <div class="kpi-sub" id="kpiMonthly">$0 / month potential</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Instant-Safe vs. Review</div>
+          <div class="kpi-label">Disabled vs. Inactive Users</div>
           <div class="kpi-val val-blue" id="kpiTriage">0 / 0</div>
-          <div class="kpi-sub" id="kpiTriageSub">Disabled accounts vs. inactive users</div>
+          <div class="kpi-sub" id="kpiTriageSub">Check hold/retention before revoking</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Shadow AI &amp; OAuth Risks</div>
+          <div class="kpi-label">Third-Party OAuth Grants</div>
           <div class="kpi-val val-red" id="kpiShadow">0</div>
-          <div class="kpi-sub">High-privilege third-party grants</div>
+          <div class="kpi-sub">High-privilege app permissions</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Users Audited</div>
           <div class="kpi-val val-amber" id="kpiUsers">240</div>
-          <div class="kpi-sub" id="scanModeSub">Sample Tenant Data</div>
+          <div class="kpi-sub" id="scanModeSub">Simulated Sample Data</div>
         </div>
       </div>
 
       <div class="tabs">
-        <div class="tab active" id="tabSpend" onclick="switchTab('spend')">License &amp; SaaS Waste (<span id="countSpend">0</span>)</div>
+        <div class="tab active" id="tabSpend" onclick="switchTab('spend')">License &amp; Card Spend Findings (<span id="countSpend">0</span>)</div>
         <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow AI &amp; OAuth Grants (<span id="countShadow">0</span>)</div>
       </div>
 
@@ -381,9 +412,9 @@
           <thead>
             <tr>
               <th>Vendor / License SKU</th>
-              <th>Detection Signal</th>
-              <th>Affected Seats</th>
-              <th>Annual Waste</th>
+              <th>Detection Signal &amp; Classification</th>
+              <th>Affected Seats / Lines</th>
+              <th>Est. Annual Impact</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -408,11 +439,39 @@
     </div>
   </div>
 
+  <!-- Security, Permissions & Data Governance Section -->
+  <section class="trust-section" id="security">
+    <div class="trust-box">
+      <div class="trust-header">
+        <h2>Security, Microsoft Graph Permissions &amp; Data Handling</h2>
+        <p>Built on least-privilege, read-only architecture so your security team can approve an audit in minutes.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <h4>1. Strictly Read-Only Graph Scopes</h4>
+          <p>ZeroWaste IT never requests write access to your tenant. Live scans only use three read-only application permissions: <code>User.Read.All</code>, <code>AuditLog.Read.All</code>, and <code>Application.Read.All</code>.</p>
+        </div>
+        <div class="trust-item">
+          <h4>2. Zero Credential Storage</h4>
+          <p>Your Tenant ID, Client ID, and Client Secret are transmitted over TLS, held strictly in memory for the duration of the Graph query, and immediately discarded. You can revoke the App Registration at any time.</p>
+        </div>
+        <div class="trust-item">
+          <h4>3. Retention &amp; Compliance Safe</h4>
+          <p>ZeroWaste IT never modifies your Entra ID tenant directly. PowerShell reclamation scripts default to <code>-WhatIf</code> dry-run mode so admins can verify Exchange Litigation Hold or mailbox retention first.</p>
+        </div>
+        <div class="trust-item">
+          <h4>4. Optional Workspace Storage &amp; Support</h4>
+          <p>Audit snapshots are only saved if you sign in and click <strong>Save Audit</strong> (protected by Row-Level Security in Supabase). Questions or security questionnaires? Email <strong>support@profitharborai.com</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="pricing-section" id="pricing">
     <div class="pricing-header">
-      <div class="pill">Immediate ROI &bull; Cancel Anytime</div>
-      <h2>Simple, Transparent Pricing</h2>
-      <p>Reclaiming just two unused Microsoft 365 E5 or Copilot licenses pays for your subscription in the first 10 minutes.</p>
+      <div class="pill">Transparent Pricing &bull; Cancel Anytime</div>
+      <h2>Simple, Predictable Plans</h2>
+      <p>Reclaiming just two unused Microsoft 365 E5 seats ($114/mo) or three Copilot seats ($90/mo) covers the $79/mo Starter plan.</p>
     </div>
 
     <div class="pricing-grid">
@@ -421,13 +480,13 @@
           <div class="plan-name">ZeroWaste IT Starter</div>
           <div class="plan-desc">For single-tenant IT admins auditing dormant seats &amp; card spend.</div>
           <div class="plan-price">$79<span>/mo</span></div>
-          <div class="plan-roi">Pays for itself by reclaiming 2 E5 seats</div>
+          <div class="plan-roi">Covered by reclaiming 2 E5 seats ($114/mo) or 3 Copilot seats ($90/mo)</div>
           <ul class="plan-features">
             <li>1 Microsoft Entra ID tenant (up to 250 users)</li>
             <li>Dormant E3, E5 &amp; Copilot license detection</li>
-            <li>One-click PowerShell reclamation scripts</li>
+            <li>One-click PowerShell reclamation scripts (-WhatIf)</li>
             <li>Shadow AI &amp; OAuth permission audit</li>
-            <li>Corporate card CSV duplicate spend scanner</li>
+            <li>Corporate card CSV multi-charge scanner</li>
           </ul>
         </div>
         <button class="btn btn-outline btn-block" onclick="checkoutPlan('starter')">Start with Starter</button>
@@ -439,13 +498,13 @@
           <div class="plan-name">ZeroWaste IT Growth</div>
           <div class="plan-desc">For growing IT &amp; finance teams tracking multi-department savings.</div>
           <div class="plan-price">$199<span>/mo</span></div>
-          <div class="plan-roi">Average customer uncovers $18,400/yr in waste</div>
+          <div class="plan-roi">Covered by reclaiming 4 E5 seats ($228/mo)</div>
           <ul class="plan-features">
             <li>Up to 3 Microsoft Entra ID tenants (1,500 users)</li>
             <li>Unlimited live Microsoft Graph API scans</li>
             <li>Saved workspace audit history &amp; snapshots</li>
             <li>Board-ready CFO Executive PDF &amp; CSV exports</li>
-            <li>Instant-Safe vs. Review user triage + UPN export</li>
+            <li>Retention-aware triage + bulk UPN export</li>
           </ul>
         </div>
         <button class="btn btn-primary btn-block" onclick="checkoutPlan('growth')">Subscribe to Growth</button>
@@ -471,14 +530,33 @@
   </section>
 
   <footer>
-    &copy; 2026 ProfitHarbor AI &bull; ZeroWaste IT (zerowaste.profitharborai.com) &bull; Read-Only Microsoft Graph Security Architecture
+    &copy; 2026 ProfitHarbor AI &bull; ZeroWaste IT (zerowaste.profitharborai.com) &bull;
+    <a onclick="document.getElementById('privacyModal').classList.add('open')">Privacy &amp; Data Policy</a> &bull;
+    Support: <a href="mailto:support@profitharborai.com">support@profitharborai.com</a>
   </footer>
+
+  <!-- Privacy & Data Policy Modal -->
+  <div class="modal-backdrop" id="privacyModal">
+    <div class="modal">
+      <h3>ZeroWaste IT — Privacy &amp; Data Retention Policy</h3>
+      <p>Effective November 2026 &bull; Operated by ProfitHarbor AI</p>
+      <div class="info-box" style="color:#e2e8f0;line-height:1.6;">
+        <strong>1. Entra ID Credentials:</strong> Tenant IDs, Client IDs, and Client Secrets submitted for live scans are used strictly in-memory to authenticate against Microsoft Graph and are never written to disk or database tables.<br/><br/>
+        <strong>2. Card CSV Uploads:</strong> Corporate card CSV files are parsed locally in your browser via JavaScript FileReader; raw CSV files are not uploaded to our servers.<br/><br/>
+        <strong>3. Saved Audit Snapshots:</strong> Only when you explicitly sign in and click "Save Audit" are summary metrics and findings stored in our encrypted Supabase database under Row-Level Security (RLS) tied to your user ID. You can delete any saved snapshot at any time.<br/><br/>
+        <strong>4. Contact:</strong> For data deletion or security inquiries, contact <strong>support@profitharborai.com</strong>.
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('privacyModal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- PowerShell Reclamation Modal -->
   <div class="modal-backdrop" id="psModal">
     <div class="modal">
       <h3 id="psModalTitle">Microsoft Graph PowerShell Reclamation Script</h3>
-      <p>Run in PowerShell 7+ with <code>User.ReadWrite.All</code> &amp; <code>Organization.Read.All</code>. Toggle Dry-Run mode below before revoking production seats.</p>
+      <p>Run in PowerShell 7+ with <code>User.ReadWrite.All</code> &amp; <code>Organization.Read.All</code>. Verify Exchange retention/holds before removing licenses.</p>
       <div class="ps-toggle-bar">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:var(--accent);">
           <input type="checkbox" id="psWhatIfCheck" checked onchange="refreshPowerShellCode()" />
@@ -486,7 +564,7 @@
         </label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);">
           <input type="checkbox" id="psDisabledOnlyCheck" onchange="refreshPowerShellCode()" />
-          Disabled Accounts Only (Instant-Safe)
+          Disabled Accounts Only
         </label>
       </div>
       <pre class="ticket-box" id="psContent"></pre>
@@ -573,8 +651,8 @@
   <!-- Ticket Modal -->
   <div class="modal-backdrop" id="ticketModal">
     <div class="modal">
-      <h3>IT Remediation Ticket</h3>
-      <p>Includes exact affected user emails so IT can reclaim licenses immediately.</p>
+      <h3>IT Remediation &amp; Review Ticket</h3>
+      <p>Includes exact affected user emails and retention/approval checks before taking action.</p>
       <pre class="ticket-box" id="ticketContent"></pre>
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="document.getElementById('ticketModal').classList.remove('open')">Close</button>
@@ -605,18 +683,21 @@
       shadow: [],
       expandedRows: {},
       totalUsers: 240,
-      workspaceName: "Acme Logistics (240 Employees)",
-      modeLabel: "Sample Tenant Data"
+      isDemo: true,
+      workspaceName: "Sample Tenant — Acme Logistics (240 Employees)",
+      modeLabel: "Simulated Sample Data"
     };
 
     const SAMPLE_DATA = {
       totalUsers: 240,
-      workspaceName: "Acme Logistics (240 Employees)",
-      modeLabel: "Sample Tenant Data",
+      isDemo: true,
+      workspaceName: "Sample Tenant — Acme Logistics (240 Employees)",
+      modeLabel: "Simulated Sample Data",
       spend: [
         {
           vendor: "Microsoft 365 E5",
           skuPartNumber: "SPE_E5",
+          classification: "Dormant License",
           signal: "4 licensed user(s) inactive 45+ days (2 disabled)",
           seats: "4 @ $57/mo",
           annual: 2736,
@@ -626,11 +707,12 @@
             { name: "Devon Brooks", upn: "dbrooks@acmelogistics.com", department: "Sales", status: "Account Disabled", last_signin: "2026-07-29" },
             { name: "Hannah Kim", upn: "hkim@acmelogistics.com", department: "Marketing", status: "Inactive 58d", last_signin: "2026-09-27" }
           ],
-          ticket: "Subject: Reclaim 4 Unused Microsoft 365 E5 Licenses ($2,736/yr)\n\nAffected Users to Revoke:\n- Marcus Vance (mvance@acmelogistics.com) | Operations | Account Disabled\n- Elena Rostova (erostova@acmelogistics.com) | Finance | Inactive 74d\n- Devon Brooks (dbrooks@acmelogistics.com) | Sales | Account Disabled\n- Hannah Kim (hkim@acmelogistics.com) | Marketing | Inactive 58d\n\nAction: Remove or downgrade SKU in Entra Admin Center."
+          ticket: "Subject: Reclaim 4 Unused Microsoft 365 E5 Licenses ($2,736/yr)\n\nAffected Users to Review/Revoke:\n- Marcus Vance (mvance@acmelogistics.com) | Operations | Account Disabled (Verify mailbox hold)\n- Elena Rostova (erostova@acmelogistics.com) | Finance | Inactive 74d\n- Devon Brooks (dbrooks@acmelogistics.com) | Sales | Account Disabled (Verify mailbox hold)\n- Hannah Kim (hkim@acmelogistics.com) | Marketing | Inactive 58d\n\nAction: Confirm Exchange retention/Litigation Hold status, then remove or downgrade SKU in Entra Admin Center."
         },
         {
           vendor: "Microsoft 365 Copilot",
           skuPartNumber: "Microsoft_365_Copilot",
+          classification: "Dormant License",
           signal: "3 licensed user(s) inactive 45+ days (1 disabled)",
           seats: "3 @ $30/mo",
           annual: 1080,
@@ -639,7 +721,7 @@
             { name: "Priya Nair", upn: "pnair@acmelogistics.com", department: "HR", status: "Account Disabled", last_signin: "2026-08-03" },
             { name: "Samir Patel", upn: "spatel@acmelogistics.com", department: "Procurement", status: "Inactive 51d", last_signin: "2026-10-04" }
           ],
-          ticket: "Subject: Reclaim 3 Unused Microsoft 365 Copilot Licenses ($1,080/yr)\n\nAffected Users to Revoke:\n- Trevor Jenkins (tjenkins@acmelogistics.com) | Logistics | Inactive 63d\n- Priya Nair (pnair@acmelogistics.com) | HR | Account Disabled\n- Samir Patel (spatel@acmelogistics.com) | Procurement | Inactive 51d\n\nAction: Reassign Copilot seats to active power users."
+          ticket: "Subject: Reclaim 3 Unused Microsoft 365 Copilot Licenses ($1,080/yr)\n\nAffected Users to Review/Revoke:\n- Trevor Jenkins (tjenkins@acmelogistics.com) | Logistics | Inactive 63d\n- Priya Nair (pnair@acmelogistics.com) | HR | Account Disabled\n- Samir Patel (spatel@acmelogistics.com) | Procurement | Inactive 51d\n\nAction: Reassign Copilot seats to active power users."
         }
       ],
       shadow: [
@@ -648,14 +730,14 @@
           user: "User / Admin OAuth Consent",
           scopes: "Calendars.Read, Mail.Read",
           risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — Otter.ai Meeting Notetaker\n\nScopes: Calendars.Read, Mail.Read\nAction: Revoke unapproved OAuth consent in Entra ID -> Enterprise Applications."
+          ticket: "Subject: Shadow IT Review — Otter.ai Meeting Notetaker\n\nScopes: Calendars.Read, Mail.Read\nAction: Verify business approval or revoke OAuth consent in Entra ID -> Enterprise Applications."
         },
         {
           app: "PDF-AI-Summarizer Pro (Unverified Publisher)",
           user: "User / Admin OAuth Consent",
           scopes: "Files.ReadWrite.All",
           risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — PDF-AI-Summarizer Pro\n\nScopes: Files.ReadWrite.All\nAction: Revoke SharePoint/OneDrive write consent immediately."
+          ticket: "Subject: Shadow IT Review — PDF-AI-Summarizer Pro\n\nScopes: Files.ReadWrite.All\nAction: Verify business approval or revoke SharePoint/OneDrive write consent immediately."
         }
       ]
     };
@@ -679,7 +761,7 @@
       const roiMultiple = Math.max(1, Math.round(totalAnnual / (planCost * 12)));
 
       document.getElementById("calcTotal").textContent = `$${totalAnnual.toLocaleString()}/yr`;
-      document.getElementById("calcRoiNote").textContent = `${roiMultiple}x projected ROI vs. ZeroWaste IT ${planName}`;
+      document.getElementById("calcRoiNote").textContent = `~${roiMultiple}x estimated return vs. ZeroWaste IT ${planName}`;
       window._lastCalcEstimate = { emp, prem, months, totalAnnual, planName };
     }
 
@@ -689,13 +771,13 @@
 
 Hi,
 
-Based on our current headcount (${est.emp} users, ${est.prem} premium M365/Copilot seats) and ${est.months} months since our last full license audit, industry benchmarks estimate we have ~$${est.totalAnnual.toLocaleString()}/yr tied up in dormant seats and duplicate SaaS subscriptions.
+Based on our current headcount (${est.emp} users, ${est.prem} premium M365/Copilot seats) and ${est.months} months since our last full license audit, we likely have ~$${est.totalAnnual.toLocaleString()}/yr tied up in dormant seats and overlapping SaaS subscriptions.
 
-I'd like to run a read-only Microsoft Entra ID & corporate card audit using ZeroWaste IT (${est.planName}). It connects strictly read-only via Microsoft Graph, pinpoints exact unused licenses by employee UPN, flags unapproved Shadow AI OAuth apps, and generates one-click PowerShell reclamation scripts.
+I'd like to run a read-only Microsoft Entra ID & corporate card audit using ZeroWaste IT (${est.planName}). It connects strictly read-only via Microsoft Graph (no credentials stored), pinpoints unused licenses by employee UPN, flags risky OAuth app grants, and generates -WhatIf PowerShell reclamation scripts.
 
-Reclaiming just 2–3 unused seats pays for the entire subscription in month one. Let me know if I'm good to spin this up today.
+Reclaiming just 2 unused E5 seats ($114/mo) or 3 Copilot seats ($90/mo) covers the subscription in month one.
 
-Live demo & security overview: https://zerowaste.profitharborai.com`;
+Security & demo overview: https://zerowaste.profitharborai.com`;
 
       navigator.clipboard.writeText(body);
       alert("CFO / Manager approval email copied to clipboard!");
@@ -727,32 +809,35 @@ Write-Host "Client Secret: $Secret" -ForegroundColor Yellow`;
     function loadSampleCardCsv() {
       const sampleFindings = [
         {
-          vendor: "ZOOM.US (Duplicate)",
-          signal: "3 separate recurring card charges",
+          vendor: "ZOOM.US (3 Card Lines — Review)",
+          classification: "Suspected Overlap",
+          signal: "3 separate recurring card charges — verify if separate dept plans or duplicate",
           seats: "3 line(s)",
           annual: 2160,
           users: [],
-          ticket: "Subject: SaaS Spend Audit — ZOOM.US ($2,160/yr)\n\nDetected 3 separate recurring corporate card charges totaling $180.00/mo across Marketing and Sales cards. Consolidate under single corporate billing."
+          ticket: "Subject: SaaS Spend Review — ZOOM.US ($2,160/yr across 3 card lines)\n\nDetected 3 separate recurring corporate card charges totaling $180.00/mo. Verify with department owners whether these can be consolidated."
         },
         {
-          vendor: "ADOBE CREATIVE CLOUD (Duplicate)",
-          signal: "2 separate recurring card charges",
+          vendor: "ADOBE CREATIVE CLOUD (2 Card Lines — Review)",
+          classification: "Suspected Overlap",
+          signal: "2 separate recurring card charges — verify if separate team accounts",
           seats: "2 line(s)",
           annual: 1440,
           users: [],
-          ticket: "Subject: SaaS Spend Audit — ADOBE CREATIVE CLOUD ($1,440/yr)\n\nDetected 2 separate recurring corporate card charges totaling $120.00/mo."
+          ticket: "Subject: SaaS Spend Review — ADOBE CREATIVE CLOUD ($1,440/yr across 2 card lines)\n\nDetected 2 separate recurring corporate card charges totaling $120.00/mo. Confirm whether seats can be consolidated."
         },
         {
-          vendor: "OPENAI *CHATGPT TEAM",
-          signal: "Recurring $150/mo unapproved card charge",
+          vendor: "OPENAI *CHATGPT TEAM (Verify Approval)",
+          classification: "Unverified Card Spend",
+          signal: "Recurring $150/mo card charge — confirm IT/security approval",
           seats: "1 line(s)",
           annual: 1800,
           users: [],
-          ticket: "Subject: Shadow AI Spend Audit — OPENAI *CHATGPT TEAM ($1,800/yr)\n\nDetected recurring $150.00/mo corporate card charge outside central IT procurement."
+          ticket: "Subject: SaaS Governance Review — OPENAI *CHATGPT TEAM ($1,800/yr)\n\nDetected recurring $150.00/mo corporate card charge. Confirm whether this workspace is approved under company AI policy."
         }
       ];
       state.spend = [...sampleFindings, ...state.spend];
-      state.modeLabel = "Merged Card CSV + Tenant Data";
+      state.modeLabel = state.isDemo ? "Simulated Demo + Sample Card CSV" : "Live Tenant + Card CSV";
       render();
     }
 
@@ -795,6 +880,7 @@ Write-Host "Client Secret: $Secret" -ForegroundColor Yellow`;
         const skuPart = guessSkuPartNumber(item.vendor, item.skuPartNumber);
         const upnLines = users.map(u => `    "${u.upn}" # ${u.name} (${u.status})`).join(",\n");
         return `# --- Reclaim ${users.length} seat(s) of ${item.vendor} ---
+# NOTE: Verify Exchange Litigation Hold / Inactive Mailbox retention before removing E3/E5 licenses.
 $Sku_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = (Get-MgSubscribedSku -All | Where-Object SkuPartNumber -eq "${skuPart}").SkuId
 $Targets_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = @(
 ${upnLines}
@@ -865,8 +951,8 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         const safeCount = (s.users || []).filter(u => (u.status || "").includes("Disabled")).length;
         const reviewCount = Math.max(0, (s.users || []).length - safeCount);
         const triageText = (s.users || []).length > 0
-          ? `${safeCount} Instant-Safe (Disabled), ${reviewCount} Manager Review`
-          : "Corporate Card Duplicate";
+          ? `${safeCount} Disabled (Check Hold), ${reviewCount} Manager Review`
+          : (s.classification || "Card Spend — Needs Verification");
         return `
           <tr>
             <td><strong>${escapeHtml(s.vendor)}</strong></td>
@@ -907,15 +993,15 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         `<div class="header"><div class="logo">ZeroWaste <span>IT</span> — Executive Audit Brief</div>`,
         `<div class="meta"><strong>${escapeHtml(state.workspaceName)}</strong><br/>Generated ${new Date().toLocaleDateString()} &bull; Users Audited: ${state.totalUsers}</div></div>`,
         `<div class="kpis">`,
-        `<div class="kpi"><div class="kpi-title">Annual Recoverable Waste</div><div class="kpi-num" style="color:#059669;">$${sim.annual.toLocaleString()}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Instant-Safe Seats</div><div class="kpi-num">${sim.disabledCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Manager Review Seats</div><div class="kpi-num">${sim.inactiveActiveCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Shadow AI OAuth Risks</div><div class="kpi-num" style="color:#dc2626;">${state.shadow.length}</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Est. Annual Impact</div><div class="kpi-num" style="color:#059669;">$${sim.annual.toLocaleString()}</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Disabled Accounts</div><div class="kpi-num">${sim.disabledCount}</div></div>`,
+        `<div class="kpi"><div class="kpi-title">Inactive Accounts</div><div class="kpi-num">${sim.inactiveActiveCount}</div></div>`,
+        `<div class="kpi"><div class="kpi-title">OAuth App Grants</div><div class="kpi-num" style="color:#dc2626;">${state.shadow.length}</div></div>`,
         `</div>`,
-        `<h2>1. Recoverable License &amp; SaaS Spend</h2>`,
-        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Reclamation Triage</th><th style="text-align:right;">Annual Savings</th></tr></thead>`,
+        `<h2>1. License &amp; Card Spend Findings (Confirmed &amp; Suspected)</h2>`,
+        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Classification / Triage</th><th style="text-align:right;">Est. Annual Impact</th></tr></thead>`,
         `<tbody>${spendRows || '<tr><td colspan="4">No license waste findings.</td></tr>'}</tbody></table>`,
-        `<h2>2. Unapproved Shadow AI &amp; Third-Party OAuth Grants</h2>`,
+        `<h2>2. Third-Party OAuth Application Permissions</h2>`,
         `<table><thead><tr><th>Connected Application</th><th>Granted Graph Scopes</th><th>Risk Level</th></tr></thead>`,
         `<tbody>${shadowRows || '<tr><td colspan="3">No high-risk OAuth grants detected.</td></tr>'}</tbody></table>`,
         `<div class="footer">Prepared via ZeroWaste IT (zerowaste.profitharborai.com) &bull; Read-Only Microsoft Graph Audit</div>`,
@@ -1107,6 +1193,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       state.spend = row.spend_findings || [];
       state.shadow = row.shadow_findings || [];
       state.totalUsers = row.total_users || 0;
+      state.isDemo = false;
       state.workspaceName = row.workspace_name;
       state.modeLabel = "Saved Audit (" + new Date(row.created_at).toLocaleDateString() + ")";
       state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
@@ -1123,10 +1210,18 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
     function render() {
       const sim = computeSimulatedTotals();
 
+      document.getElementById("demoBanner").style.display = state.isDemo ? "flex" : "none";
+      const dot = document.getElementById("statusDot");
+      if (state.isDemo) {
+        dot.classList.remove("live");
+      } else {
+        dot.classList.add("live");
+      }
+
       document.getElementById("kpiSavings").textContent = "$" + sim.annual.toLocaleString();
-      document.getElementById("kpiMonthly").textContent = "$" + sim.monthly.toLocaleString() + " / month recoverable";
-      document.getElementById("kpiTriage").textContent = `${sim.disabledCount} Safe / ${sim.inactiveActiveCount} Review`;
-      document.getElementById("kpiTriageSub").textContent = `${sim.disabledCount} disabled (instant) · ${sim.inactiveActiveCount} inactive`;
+      document.getElementById("kpiMonthly").textContent = "$" + sim.monthly.toLocaleString() + " / month potential";
+      document.getElementById("kpiTriage").textContent = `${sim.disabledCount} Disabled / ${sim.inactiveActiveCount} Inactive`;
+      document.getElementById("kpiTriageSub").textContent = `Verify retention/holds before revoking`;
       document.getElementById("kpiShadow").textContent = state.shadow.length;
       document.getElementById("kpiUsers").textContent = state.totalUsers;
       document.getElementById("scanModeSub").textContent = state.modeLabel;
@@ -1148,12 +1243,16 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
             ? `<button class="btn btn-blue btn-sm" onclick="openPowerShellModal(${idx})">PowerShell</button>`
             : "";
 
+          const classBadge = hasUsers
+            ? `<span class="badge badge-safe">Dormant License</span>`
+            : `<span class="badge badge-med">${escapeHtml(item.classification || "Needs Verification")}</span>`;
+
           let drawerHtml = "";
           if (hasUsers && isOpen) {
             const userRows = item.users.map(u => {
               const isDisabled = (u.status || "").includes("Disabled");
               const triageBadge = isDisabled
-                ? `<span class="badge badge-safe">Instant Safe Reclaim</span>`
+                ? `<span class="badge badge-safe">Disabled — Check Hold/Retention</span>`
                 : `<span class="badge badge-med">Verify (${escapeHtml(u.status)})</span>`;
               return `
                 <tr>
@@ -1196,7 +1295,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
           return `
             <tr>
               <td><strong>${escapeHtml(item.vendor)}</strong></td>
-              <td style="color:var(--muted);">${escapeHtml(item.signal)}</td>
+              <td style="color:var(--muted);">${classBadge} <span style="margin-left:6px;">${escapeHtml(item.signal)}</span></td>
               <td>${escapeHtml(item.seats)}</td>
               <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
               <td>
@@ -1223,7 +1322,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
               <td style="color:var(--muted);">${escapeHtml(item.user)}</td>
               <td><code>${escapeHtml(item.scopes)}</code></td>
               <td><span class="badge ${badgeClass}">${escapeHtml(item.risk)}</span></td>
-              <td><button class="btn btn-outline btn-sm" onclick="openTicket('shadow', ${idx})">Revoke Ticket</button></td>
+              <td><button class="btn btn-outline btn-sm" onclick="openTicket('shadow', ${idx})">Review Ticket</button></td>
             </tr>
           `;
         }).join("");
@@ -1246,6 +1345,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       state.spend = copy.spend;
       state.shadow = copy.shadow;
       state.totalUsers = copy.totalUsers;
+      state.isDemo = true;
       state.workspaceName = copy.workspaceName;
       state.modeLabel = copy.modeLabel;
       state.expandedRows = { 0: true };
@@ -1302,6 +1402,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         state.spend = data.spend || [];
         state.shadow = data.shadow || [];
         state.totalUsers = data.total_users || 0;
+        state.isDemo = false;
         state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
         state.workspaceName = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
         state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
@@ -1339,17 +1440,27 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
         const csvFindings = Object.entries(map).map(([vendor, d]) => {
           const annual = Math.round(d.monthly * 12);
           return {
-            vendor: d.count > 1 ? `${vendor} (Duplicate)` : vendor,
-            signal: d.count > 1 ? `${d.count} separate recurring card charges` : `Recurring $${d.monthly.toFixed(0)}/mo charge`,
+            vendor: d.count > 1 ? `${vendor} (${d.count} Card Lines — Review)` : `${vendor} (Verify Approval)`,
+            classification: d.count > 1 ? "Suspected Overlap" : "Card Charge — Verify",
+            signal: d.count > 1 ? `${d.count} separate recurring card charges — check for overlap` : `Recurring $${d.monthly.toFixed(0)}/mo charge — confirm approval`,
             seats: `${d.count} line(s)`,
             annual,
             users: [],
-            ticket: `Subject: SaaS Spend Audit — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo.`
+            ticket: `Subject: SaaS Spend Review — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo. Confirm departmental approval and check for duplicate accounts.`
           };
         });
         if (csvFindings.length > 0) {
-          state.spend = [...csvFindings, ...state.spend];
-          state.modeLabel = "Merged CSV + Tenant Data";
+          if (state.isDemo) {
+            state.spend = csvFindings;
+            state.shadow = [];
+            state.totalUsers = 0;
+            state.isDemo = false;
+            state.workspaceName = `Card Spend Audit — ${file.name}`;
+            document.getElementById("workspaceInput").value = state.workspaceName;
+          } else {
+            state.spend = [...csvFindings, ...state.spend];
+          }
+          state.modeLabel = "Uploaded Card CSV Audit";
           render();
         }
       };
@@ -1369,19 +1480,19 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
     }
 
     function exportCsvReport() {
-      const rows = [["Client_Workspace", "Category", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Annual_Waste_USD"]];
+      const rows = [["Client_Workspace", "Category", "Classification", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Est_Annual_Impact_USD"]];
       state.spend.forEach(s => {
         if (Array.isArray(s.users) && s.users.length > 0) {
           const perSeatAnnual = Math.round((Number(s.annual) || 0) / s.users.length);
           s.users.forEach(u => {
-            rows.push([state.workspaceName, "Unused License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
+            rows.push([state.workspaceName, "Unused License", "Dormant License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
           });
         } else {
-          rows.push([state.workspaceName, "Card SaaS Spend", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
+          rows.push([state.workspaceName, "Card SaaS Spend", s.classification || "Needs Verification", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
         }
       });
       state.shadow.forEach(sh => {
-        rows.push([state.workspaceName, "Shadow AI / OAuth", sh.app, sh.user, "", "", sh.scopes, "", 0]);
+        rows.push([state.workspaceName, "Shadow AI / OAuth", "OAuth Grant", sh.app, sh.user, "", "", sh.scopes, "", 0]);
       });
       const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv" });
