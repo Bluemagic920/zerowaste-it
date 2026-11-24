@@ -59,16 +59,39 @@
     .btn-sm { padding: 6px 11px; font-size: 0.78rem; }
     .btn-block { width: 100%; }
 
-    .hero { padding: 52px 6% 32px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .hero { padding: 48px 6% 28px; max-width: 1200px; margin: 0 auto; text-align: center; }
     .pill {
       display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
-      background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 18px;
+      background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 16px;
     }
-    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 16px; line-height: 1.15; }
-    .hero p { color: var(--muted); font-size: 1.08rem; max-width: 680px; margin: 0 auto 26px; }
-    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 14px; line-height: 1.15; }
+    .hero p { color: var(--muted); font-size: 1.06rem; max-width: 680px; margin: 0 auto 24px; }
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    .container { max-width: 1200px; margin: 0 auto 72px; padding: 0 6%; }
+    .container { max-width: 1200px; margin: 0 auto 64px; padding: 0 6%; }
+
+    /* Lead Magnet ROI Calculator */
+    .roi-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(18, 24, 38, 0.98));
+      border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; padding: 24px 28px;
+      margin-bottom: 32px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: center;
+    }
+    @media (max-width: 840px) { .roi-card { grid-template-columns: 1fr; } }
+    .roi-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; }
+    .roi-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
+    .roi-sliders { display: flex; flex-direction: column; gap: 14px; }
+    .roi-row { display: flex; flex-direction: column; gap: 5px; }
+    .roi-row-head { display: flex; justify-content: space-between; font-size: 0.83rem; color: #cbd5e1; }
+    .roi-row-head strong { color: var(--accent); }
+    .roi-row input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .roi-result-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center;
+    }
+    .roi-result-label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+    .roi-result-num { font-size: 2.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; margin: 6px 0; }
+    .roi-result-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+    .roi-result-actions { display: flex; flex-direction: column; gap: 8px; }
+
     .dashboard-shell {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
@@ -77,8 +100,13 @@
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
       padding: 16px 24px; background: var(--surface-2); border-bottom: 1px solid var(--border);
     }
-    .dash-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; }
+    .dash-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; flex-wrap: wrap; }
     .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .client-input {
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 220px;
+    }
+    .client-input:focus { outline: none; border-color: var(--accent); }
     .dash-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
     .simulator-bar {
@@ -169,7 +197,8 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      width: 100%; max-width: 640px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      width: 100%; max-width: 650px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      max-height: 92vh; overflow-y: auto;
     }
     .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
     .modal p { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; }
@@ -182,7 +211,7 @@
     .form-group input:focus { outline: none; border-color: var(--accent); }
     .info-box {
       background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; color: #bfdbfe; margin-bottom: 16px;
+      border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #bfdbfe; margin-bottom: 16px;
     }
     .ps-toggle-bar {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
@@ -196,7 +225,7 @@
     pre.ticket-box {
       background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
-      white-space: pre-wrap; color: #e2e8f0; margin-top: 6px; max-height: 340px; overflow-y: auto; line-height: 1.45;
+      white-space: pre-wrap; color: #e2e8f0; margin-top: 6px; max-height: 320px; overflow-y: auto; line-height: 1.45;
     }
 
     .history-list { max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
@@ -221,6 +250,7 @@
       <span>ZeroWaste IT</span>
     </div>
     <div class="nav-actions">
+      <a href="#estimator" class="nav-link">ROI Calculator</a>
       <a href="#pricing" class="nav-link">Pricing</a>
       <span class="user-chip" id="userEmailChip" style="display:none;"></span>
       <button class="btn btn-outline btn-sm" id="btnHistory" style="display:none;" onclick="openHistoryModal()">Saved Audits</button>
@@ -241,16 +271,58 @@
         Upload Card CSV
         <input type="file" id="csvInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(event)" />
       </label>
+      <button class="btn btn-outline" onclick="loadSampleCardCsv()">Test Sample Card CSV</button>
       <a href="#pricing" class="btn btn-outline">View Plans</a>
     </div>
   </section>
 
   <div class="container">
+    <!-- 60-Second SaaS Waste Estimator Lead Magnet -->
+    <div class="roi-card" id="estimator">
+      <div>
+        <div class="roi-title">60-Second SaaS &amp; M365 Waste Estimator</div>
+        <div class="roi-sub">No login or tenant credentials required. Estimate your annual recoverable spend and copy a ready-to-send CFO approval email.</div>
+        <div class="roi-sliders">
+          <div class="roi-row">
+            <div class="roi-row-head">
+              <span>Total Employees / Licensed Users</span>
+              <strong id="calcEmpVal">250 users</strong>
+            </div>
+            <input type="range" id="calcEmp" min="25" max="2500" step="25" value="250" oninput="updateRoiCalculator()" />
+          </div>
+          <div class="roi-row">
+            <div class="roi-row-head">
+              <span>Premium M365 E5 / Copilot Add-On Seats</span>
+              <strong id="calcPremVal">60 seats</strong>
+            </div>
+            <input type="range" id="calcPrem" min="0" max="1000" step="10" value="60" oninput="updateRoiCalculator()" />
+          </div>
+          <div class="roi-row">
+            <div class="roi-row-head">
+              <span>Months Since Last Manual License Audit</span>
+              <strong id="calcMonthsVal">6 months</strong>
+            </div>
+            <input type="range" id="calcMonths" min="1" max="24" step="1" value="6" oninput="updateRoiCalculator()" />
+          </div>
+        </div>
+      </div>
+
+      <div class="roi-result-box">
+        <div class="roi-result-label">Estimated Annual Recoverable Waste</div>
+        <div class="roi-result-num" id="calcTotal">$18,480/yr</div>
+        <div class="roi-result-note" id="calcRoiNote">23x ROI vs. ZeroWaste IT Starter ($79/mo)</div>
+        <div class="roi-result-actions">
+          <button class="btn btn-primary btn-block" onclick="openConnectModal()">Verify Free with Live Scan</button>
+          <button class="btn btn-outline btn-block btn-sm" onclick="copyCfoApprovalEmail()">Copy CFO / Boss Approval Email</button>
+        </div>
+      </div>
+    </div>
+
     <div class="dashboard-shell">
       <div class="dash-topbar">
         <div class="dash-title">
           <span class="status-dot" id="statusDot"></span>
-          <span id="workspaceLabel">Interactive Sandbox — Acme Logistics (240 Employees)</span>
+          <input type="text" class="client-input" id="workspaceInput" value="Acme Logistics (240 Employees)" onchange="updateWorkspaceName(this.value)" title="Edit client or company name for PDF/CSV exports" />
         </div>
         <div class="dash-controls">
           <button class="btn btn-primary btn-sm" id="btnSaveScan" onclick="saveCurrentScan()">Save Audit</button>
@@ -308,919 +380,4 @@
         <table>
           <thead>
             <tr>
-              <th>Vendor / License SKU</th>
-              <th>Detection Signal</th>
-              <th>Affected Seats</th>
-              <th>Annual Waste</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tbodySpend"></tbody>
-        </table>
-      </div>
-
-      <div class="table-wrap" id="panelShadow" style="display:none;">
-        <table>
-          <thead>
-            <tr>
-              <th>Connected App &amp; Publisher</th>
-              <th>Consent Scope</th>
-              <th>Granted Permissions</th>
-              <th>Risk</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="tbodyShadow"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <section class="pricing-section" id="pricing">
-    <div class="pricing-header">
-      <div class="pill">Immediate ROI &bull; Cancel Anytime</div>
-      <h2>Simple, Transparent Pricing</h2>
-      <p>Reclaiming just two unused Microsoft 365 E5 or Copilot licenses pays for your subscription in the first 10 minutes.</p>
-    </div>
-
-    <div class="pricing-grid">
-      <div class="plan-card">
-        <div>
-          <div class="plan-name">ZeroWaste IT Starter</div>
-          <div class="plan-desc">For single-tenant IT admins auditing dormant seats &amp; card spend.</div>
-          <div class="plan-price">$79<span>/mo</span></div>
-          <div class="plan-roi">Pays for itself by reclaiming 2 E5 seats</div>
-          <ul class="plan-features">
-            <li>1 Microsoft Entra ID tenant (up to 250 users)</li>
-            <li>Dormant E3, E5 &amp; Copilot license detection</li>
-            <li>One-click PowerShell reclamation scripts</li>
-            <li>Shadow AI &amp; OAuth permission audit</li>
-            <li>Corporate card CSV duplicate spend scanner</li>
-          </ul>
-        </div>
-        <button class="btn btn-outline btn-block" onclick="checkoutPlan('starter')">Start with Starter</button>
-      </div>
-
-      <div class="plan-card featured">
-        <span class="popular-tag">Most Popular</span>
-        <div>
-          <div class="plan-name">ZeroWaste IT Growth</div>
-          <div class="plan-desc">For growing IT &amp; finance teams tracking multi-department savings.</div>
-          <div class="plan-price">$199<span>/mo</span></div>
-          <div class="plan-roi">Average customer uncovers $18,400/yr in waste</div>
-          <ul class="plan-features">
-            <li>Up to 3 Microsoft Entra ID tenants (1,500 users)</li>
-            <li>Unlimited live Microsoft Graph API scans</li>
-            <li>Saved workspace audit history &amp; snapshots</li>
-            <li>Board-ready CFO Executive PDF &amp; CSV exports</li>
-            <li>Instant-Safe vs. Review user triage + UPN export</li>
-          </ul>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="checkoutPlan('growth')">Subscribe to Growth</button>
-      </div>
-
-      <div class="plan-card">
-        <div>
-          <div class="plan-name">ZeroWaste IT MSP / CFO</div>
-          <div class="plan-desc">For Managed Service Providers &amp; Fractional CFOs auditing client fleets.</div>
-          <div class="plan-price">$499<span>/mo</span></div>
-          <div class="plan-roi">Turnkey SaaS audit deliverable for client QBRs</div>
-          <ul class="plan-features">
-            <li>Unlimited client Microsoft Entra ID tenants</li>
-            <li>Unlimited employee seats audited</li>
-            <li>Multi-client saved audit workspaces</li>
-            <li>Executive CFO PDF &amp; Shadow AI QBR reports</li>
-            <li>Bulk PowerShell scripts &amp; priority support</li>
-          </ul>
-        </div>
-        <button class="btn btn-outline btn-block" onclick="checkoutPlan('msp')">Subscribe to MSP / CFO</button>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    &copy; 2026 ProfitHarbor AI &bull; ZeroWaste IT (zerowaste.profitharborai.com) &bull; Read-Only Microsoft Graph Security Architecture
-  </footer>
-
-  <!-- PowerShell Reclamation Modal -->
-  <div class="modal-backdrop" id="psModal">
-    <div class="modal">
-      <h3 id="psModalTitle">Microsoft Graph PowerShell Reclamation Script</h3>
-      <p>Run in PowerShell 7+ with <code>User.ReadWrite.All</code> &amp; <code>Organization.Read.All</code>. Toggle Dry-Run mode below before revoking production seats.</p>
-      <div class="ps-toggle-bar">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:var(--accent);">
-          <input type="checkbox" id="psWhatIfCheck" checked onchange="refreshPowerShellCode()" />
-          Safe Dry-Run Mode (-WhatIf enabled)
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);">
-          <input type="checkbox" id="psDisabledOnlyCheck" onchange="refreshPowerShellCode()" />
-          Disabled Accounts Only (Instant-Safe)
-        </label>
-      </div>
-      <pre class="ticket-box" id="psContent"></pre>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('psModal').classList.remove('open')">Close</button>
-        <button class="btn btn-primary" onclick="copyPowerShellText()">Copy PowerShell Script</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Auth Modal -->
-  <div class="modal-backdrop" id="authModal">
-    <div class="modal">
-      <h3 id="authModalTitle">Sign In to ZeroWaste IT</h3>
-      <p>Save your Entra ID and card spend audits to track reclaimed savings over time.</p>
-      <div class="form-group">
-        <label>Work Email</label>
-        <input type="email" id="authEmail" placeholder="you@company.com" />
-      </div>
-      <div class="form-group">
-        <label>Password (min 6 characters)</label>
-        <input type="password" id="authPassword" placeholder="••••••••" />
-      </div>
-      <div class="error-msg" id="authError"></div>
-      <div class="success-msg" id="authSuccess"></div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
-        <button class="btn btn-outline" onclick="handleSignUp()">Create Account</button>
-        <button class="btn btn-primary" onclick="handleSignIn()">Sign In</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Saved Audits History Modal -->
-  <div class="modal-backdrop" id="historyModal">
-    <div class="modal">
-      <h3>Saved Workspace Audits</h3>
-      <p>Load any previous audit snapshot or delete old records.</p>
-      <div class="history-list" id="historyList">Loading...</div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('historyModal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Connect Live Entra ID Modal -->
-  <div class="modal-backdrop" id="connectModal">
-    <div class="modal">
-      <h3>Connect Live Microsoft Entra ID</h3>
-      <p>Credentials are used in-memory for a read-only Microsoft Graph scan and are never stored.</p>
-      <div class="info-box">
-        <strong>Required Read-Only App Permissions (Admin Consent):</strong><br/>
-        <code>User.Read.All</code> &bull; <code>AuditLog.Read.All</code> &bull; <code>Application.Read.All</code>
-      </div>
-      <div class="form-group">
-        <label>Directory (Tenant) ID</label>
-        <input type="text" id="inTenantId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
-      </div>
-      <div class="form-group">
-        <label>Application (Client) ID</label>
-        <input type="text" id="inClientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
-      </div>
-      <div class="form-group">
-        <label>Client Secret Value</label>
-        <input type="password" id="inClientSecret" placeholder="Enter Entra App Client Secret" />
-      </div>
-      <div class="form-group">
-        <label>Inactivity Threshold (Days)</label>
-        <input type="number" id="inInactiveDays" value="45" min="7" max="365" />
-      </div>
-      <div class="error-msg" id="scanError"></div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeConnectModal()">Cancel</button>
-        <button class="btn btn-primary" id="btnRunScan" onclick="runLiveEntraScan()">Run Live Audit</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Ticket Modal -->
-  <div class="modal-backdrop" id="ticketModal">
-    <div class="modal">
-      <h3>IT Remediation Ticket</h3>
-      <p>Includes exact affected user emails so IT can reclaim licenses immediately.</p>
-      <pre class="ticket-box" id="ticketContent"></pre>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('ticketModal').classList.remove('open')">Close</button>
-        <button class="btn btn-primary" onclick="copyTicketText()">Copy Ticket</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API_BASE = "https://zerowaste-it-api.onrender.com";
-    const SUPABASE_URL = "https://nhiqbcevcdxfzvrprgck.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VwM3o7h2Jxq9_2WkkdE4kg_WKU6bvP6";
-
-    const STRIPE_LINKS = {
-      starter: "https://buy.stripe.com/3cIbJ08472Le3dt4frfnO00",
-      growth: "https://buy.stripe.com/7sY00idor99CaFVbHTfnO01",
-      msp: "https://buy.stripe.com/8x2aEWfwz99C15leU5fnO02"
-    };
-
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      db: { schema: "zerowaste" }
-    });
-
-    let currentUser = null;
-    let activePsIdx = -1;
-    let state = {
-      spend: [],
-      shadow: [],
-      expandedRows: {},
-      totalUsers: 240,
-      workspaceName: "Interactive Sandbox — Acme Logistics (240 Employees)",
-      modeLabel: "Sample Tenant Data"
-    };
-
-    const SAMPLE_DATA = {
-      totalUsers: 240,
-      workspaceName: "Interactive Sandbox — Acme Logistics (240 Employees)",
-      modeLabel: "Sample Tenant Data",
-      spend: [
-        {
-          vendor: "Microsoft 365 E5",
-          skuPartNumber: "SPE_E5",
-          signal: "4 licensed user(s) inactive 45+ days (2 disabled)",
-          seats: "4 @ $57/mo",
-          annual: 2736,
-          users: [
-            { name: "Marcus Vance", upn: "mvance@acmelogistics.com", department: "Operations", status: "Account Disabled", last_signin: "2026-08-14" },
-            { name: "Elena Rostova", upn: "erostova@acmelogistics.com", department: "Finance", status: "Inactive 74d", last_signin: "2026-09-11" },
-            { name: "Devon Brooks", upn: "dbrooks@acmelogistics.com", department: "Sales", status: "Account Disabled", last_signin: "2026-07-29" },
-            { name: "Hannah Kim", upn: "hkim@acmelogistics.com", department: "Marketing", status: "Inactive 58d", last_signin: "2026-09-27" }
-          ],
-          ticket: "Subject: Reclaim 4 Unused Microsoft 365 E5 Licenses ($2,736/yr)\n\nAffected Users to Revoke:\n- Marcus Vance (mvance@acmelogistics.com) | Operations | Account Disabled\n- Elena Rostova (erostova@acmelogistics.com) | Finance | Inactive 74d\n- Devon Brooks (dbrooks@acmelogistics.com) | Sales | Account Disabled\n- Hannah Kim (hkim@acmelogistics.com) | Marketing | Inactive 58d\n\nAction: Remove or downgrade SKU in Entra Admin Center."
-        },
-        {
-          vendor: "Microsoft 365 Copilot",
-          skuPartNumber: "Microsoft_365_Copilot",
-          signal: "3 licensed user(s) inactive 45+ days (1 disabled)",
-          seats: "3 @ $30/mo",
-          annual: 1080,
-          users: [
-            { name: "Trevor Jenkins", upn: "tjenkins@acmelogistics.com", department: "Logistics", status: "Inactive 63d", last_signin: "2026-09-22" },
-            { name: "Priya Nair", upn: "pnair@acmelogistics.com", department: "HR", status: "Account Disabled", last_signin: "2026-08-03" },
-            { name: "Samir Patel", upn: "spatel@acmelogistics.com", department: "Procurement", status: "Inactive 51d", last_signin: "2026-10-04" }
-          ],
-          ticket: "Subject: Reclaim 3 Unused Microsoft 365 Copilot Licenses ($1,080/yr)\n\nAffected Users to Revoke:\n- Trevor Jenkins (tjenkins@acmelogistics.com) | Logistics | Inactive 63d\n- Priya Nair (pnair@acmelogistics.com) | HR | Account Disabled\n- Samir Patel (spatel@acmelogistics.com) | Procurement | Inactive 51d\n\nAction: Reassign Copilot seats to active power users."
-        }
-      ],
-      shadow: [
-        {
-          app: "Otter.ai Meeting Notetaker (Unverified Publisher)",
-          user: "User / Admin OAuth Consent",
-          scopes: "Calendars.Read, Mail.Read",
-          risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — Otter.ai Meeting Notetaker\n\nScopes: Calendars.Read, Mail.Read\nAction: Revoke unapproved OAuth consent in Entra ID -> Enterprise Applications."
-        },
-        {
-          app: "PDF-AI-Summarizer Pro (Unverified Publisher)",
-          user: "User / Admin OAuth Consent",
-          scopes: "Files.ReadWrite.All",
-          risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — PDF-AI-Summarizer Pro\n\nScopes: Files.ReadWrite.All\nAction: Revoke SharePoint/OneDrive write consent immediately."
-        }
-      ]
-    };
-
-    function guessSkuPartNumber(vendorName, explicitSku) {
-      if (explicitSku) return explicitSku;
-      const v = (vendorName || "").toLowerCase();
-      if (v.includes("copilot")) return "Microsoft_365_Copilot";
-      if (v.includes("e5")) return "SPE_E5";
-      if (v.includes("e3")) return "SPE_E3";
-      if (v.includes("business premium")) return "SPB";
-      if (v.includes("business standard")) return "O365_BUSINESS_PREMIUM";
-      if (v.includes("f3")) return "SPE_F1";
-      if (v.includes("visio")) return "VISIOCLIENT";
-      if (v.includes("project")) return "PROJECTPREMIUM";
-      return "ENTERPRISEPACK";
-    }
-
-    function openPowerShellModal(idx) {
-      activePsIdx = idx;
-      document.getElementById("psModalTitle").textContent = idx === -1
-        ? "Bulk Microsoft Graph PowerShell Reclamation Script (All SKUs)"
-        : `PowerShell Reclamation Script — ${state.spend[idx]?.vendor || "License"}`;
-      refreshPowerShellCode();
-      document.getElementById("psModal").classList.add("open");
-    }
-
-    function refreshPowerShellCode() {
-      const whatIf = document.getElementById("psWhatIfCheck").checked;
-      const disabledOnly = document.getElementById("psDisabledOnlyCheck").checked;
-      const items = activePsIdx === -1 ? state.spend : [state.spend[activePsIdx]].filter(Boolean);
-
-      const blocks = items.map(item => {
-        const users = (item.users || []).filter(u => !disabledOnly || (u.status || "").includes("Disabled"));
-        if (users.length === 0) return `# No matching users for ${item.vendor} under current filter.`;
-        const skuPart = guessSkuPartNumber(item.vendor, item.skuPartNumber);
-        const upnLines = users.map(u => `    "${u.upn}" # ${u.name} (${u.status})`).join(",\n");
-        return `# --- Reclaim ${users.length} seat(s) of ${item.vendor} ---
-$Sku_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = (Get-MgSubscribedSku -All | Where-Object SkuPartNumber -eq "${skuPart}").SkuId
-$Targets_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = @(
-${upnLines}
-)
-foreach ($Upn in $Targets_${skuPart.replace(/[^A-Za-z0-9]/g, "_")}) {
-    Write-Host "Revoking ${item.vendor} from $Upn..." -ForegroundColor Yellow
-    Set-MgUserLicense -UserId $Upn -AddLicenses @{} -RemoveLicenses @($Sku_${skuPart.replace(/[^A-Za-z0-9]/g, "_")})${whatIf ? " -WhatIf" : ""}
-}`;
-      }).join("\n\n");
-
-      const header = `# Generated by ZeroWaste IT (${new Date().toLocaleDateString()})
-# Mode: ${whatIf ? "DRY-RUN (-WhatIf active — no licenses will be modified)" : "LIVE EXECUTION"}
-Install-Module Microsoft.Graph.Users.Actions -Scope CurrentUser -ErrorAction SilentlyContinue
-Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
-
-`;
-      document.getElementById("psContent").textContent = header + (blocks || "# No user-level M365 license findings loaded.");
-    }
-
-    function copyPowerShellText() {
-      const text = document.getElementById("psContent").textContent;
-      navigator.clipboard.writeText(text);
-      alert("PowerShell reclamation script copied to clipboard!");
-    }
-
-    function computeSimulatedTotals() {
-      const mode = document.getElementById("simActionMode")?.value || "revoke";
-      const pct = (parseInt(document.getElementById("simPctSlider")?.value, 10) || 100) / 100;
-      document.getElementById("simPctLabel").textContent = Math.round(pct * 100) + "%";
-
-      let rawAnnual = 0;
-      let disabledCount = 0;
-      let inactiveActiveCount = 0;
-
-      state.spend.forEach(item => {
-        const users = Array.isArray(item.users) ? item.users : [];
-        const dUsers = users.filter(u => (u.status || "").includes("Disabled")).length;
-        const aUsers = Math.max(0, users.length - dUsers);
-        disabledCount += dUsers;
-        inactiveActiveCount += aUsers;
-
-        let itemAnnual = Number(item.annual) || 0;
-        if (mode === "downgrade" && (item.vendor || "").toLowerCase().includes("e5") && users.length > 0) {
-          itemAnnual = users.length * 21 * 12;
-        } else if (mode === "disabled_only") {
-          itemAnnual = users.length > 0 ? (itemAnnual / users.length) * dUsers : 0;
-        }
-        rawAnnual += itemAnnual;
-      });
-
-      return {
-        annual: Math.round(rawAnnual * pct),
-        monthly: Math.round((rawAnnual * pct) / 12),
-        disabledCount,
-        inactiveActiveCount
-      };
-    }
-
-    function exportExecutivePdf() {
-      const sim = computeSimulatedTotals();
-      const win = window.open("", "_blank");
-      if (!win) {
-        alert("Please allow pop-ups to generate the Executive PDF report.");
-        return;
-      }
-
-      const spendRows = state.spend.map(s => {
-        const safeCount = (s.users || []).filter(u => (u.status || "").includes("Disabled")).length;
-        const reviewCount = Math.max(0, (s.users || []).length - safeCount);
-        const triageText = (s.users || []).length > 0
-          ? `${safeCount} Instant-Safe (Disabled), ${reviewCount} Manager Review`
-          : "Corporate Card Duplicate";
-        return `
-          <tr>
-            <td><strong>${escapeHtml(s.vendor)}</strong></td>
-            <td>${escapeHtml(s.signal)}</td>
-            <td>${escapeHtml(triageText)}</td>
-            <td style="text-align:right;font-weight:700;color:#059669;">$${Number(s.annual).toLocaleString()}/yr</td>
-          </tr>
-        `;
-      }).join("");
-
-      const shadowRows = state.shadow.map(sh => `
-        <tr>
-          <td><strong>${escapeHtml(sh.app)}</strong></td>
-          <td><code>${escapeHtml(sh.scopes)}</code></td>
-          <td><span style="color:#dc2626;font-weight:700;">${escapeHtml(sh.risk)}</span></td>
-        </tr>
-      `).join("");
-
-      const docHtml = [
-        "<!DOCTYPE html><html><head>",
-        "<title>ZeroWaste IT — Executive SaaS & Security Audit Report</title>",
-        "<style>",
-        "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #0f172a; padding: 36px; max-width: 900px; margin: 0 auto; }",
-        ".header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #10b981; padding-bottom: 16px; margin-bottom: 24px; }",
-        ".logo { font-size: 22px; font-weight: 800; color: #0b0f17; }",
-        ".logo span { color: #10b981; }",
-        ".meta { text-align: right; font-size: 12px; color: #475569; }",
-        ".kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }",
-        ".kpi { border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; }",
-        ".kpi-title { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; }",
-        ".kpi-num { font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px; }",
-        "h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; margin: 22px 0 10px; }",
-        "table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }",
-        "th { background: #f1f5f9; text-align: left; padding: 9px 10px; border-bottom: 1px solid #cbd5e1; font-size: 11px; text-transform: uppercase; }",
-        "td { padding: 9px 10px; border-bottom: 1px solid #e2e8f0; }",
-        ".footer { margin-top: 32px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 12px; }",
-        "</style></head><body>",
-        `<div class="header"><div class="logo">ZeroWaste <span>IT</span> — Executive Audit Brief</div>`,
-        `<div class="meta"><strong>${escapeHtml(state.workspaceName)}</strong><br/>Generated ${new Date().toLocaleDateString()} &bull; Users Audited: ${state.totalUsers}</div></div>`,
-        `<div class="kpis">`,
-        `<div class="kpi"><div class="kpi-title">Annual Recoverable Waste</div><div class="kpi-num" style="color:#059669;">$${sim.annual.toLocaleString()}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Instant-Safe Seats</div><div class="kpi-num">${sim.disabledCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Manager Review Seats</div><div class="kpi-num">${sim.inactiveActiveCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Shadow AI OAuth Risks</div><div class="kpi-num" style="color:#dc2626;">${state.shadow.length}</div></div>`,
-        `</div>`,
-        `<h2>1. Recoverable License &amp; SaaS Spend</h2>`,
-        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Reclamation Triage</th><th style="text-align:right;">Annual Savings</th></tr></thead>`,
-        `<tbody>${spendRows || '<tr><td colspan="4">No license waste findings.</td></tr>'}</tbody></table>`,
-        `<h2>2. Unapproved Shadow AI &amp; Third-Party OAuth Grants</h2>`,
-        `<table><thead><tr><th>Connected Application</th><th>Granted Graph Scopes</th><th>Risk Level</th></tr></thead>`,
-        `<tbody>${shadowRows || '<tr><td colspan="3">No high-risk OAuth grants detected.</td></tr>'}</tbody></table>`,
-        `<div class="footer">Prepared via ZeroWaste IT (zerowaste.profitharborai.com) &bull; Read-Only Microsoft Graph Audit</div>`,
-        `<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="window.print()" style="display:none;" />`,
-        `</body></html>`
-      ].join("");
-
-      win.document.write(docHtml);
-      win.document.close();
-    }
-
-    function checkoutPlan(planKey) {
-      const baseUrl = STRIPE_LINKS[planKey];
-      if (!baseUrl) return;
-      const targetUrl = currentUser?.email
-        ? `${baseUrl}?prefilled_email=${encodeURIComponent(currentUser.email)}`
-        : baseUrl;
-      window.open(targetUrl, "_blank", "noopener");
-    }
-
-    function checkUpgradeRedirect() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("upgraded") === "true") {
-        document.getElementById("upgradeBanner").classList.add("open");
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
-
-    function dismissUpgradeBanner() {
-      document.getElementById("upgradeBanner").classList.remove("open");
-    }
-
-    async function initAuth() {
-      const { data } = await sb.auth.getSession();
-      updateAuthUI(data?.session?.user || null);
-      sb.auth.onAuthStateChange((_event, session) => {
-        updateAuthUI(session?.user || null);
-      });
-    }
-
-    function updateAuthUI(user) {
-      currentUser = user;
-      const chip = document.getElementById("userEmailChip");
-      const btnAuth = document.getElementById("btnAuthNav");
-      const btnSignOut = document.getElementById("btnSignOut");
-      const btnHistory = document.getElementById("btnHistory");
-
-      if (user) {
-        chip.textContent = user.email;
-        chip.style.display = "inline-block";
-        btnAuth.style.display = "none";
-        btnSignOut.style.display = "inline-flex";
-        btnHistory.style.display = "inline-flex";
-      } else {
-        chip.style.display = "none";
-        btnAuth.style.display = "inline-flex";
-        btnSignOut.style.display = "none";
-        btnHistory.style.display = "none";
-      }
-    }
-
-    function openAuthModal() {
-      document.getElementById("authError").style.display = "none";
-      document.getElementById("authSuccess").style.display = "none";
-      document.getElementById("authModal").classList.add("open");
-    }
-
-    function closeAuthModal() {
-      document.getElementById("authModal").classList.remove("open");
-    }
-
-    async function handleSignUp() {
-      const email = document.getElementById("authEmail").value.trim();
-      const password = document.getElementById("authPassword").value;
-      const errEl = document.getElementById("authError");
-      const okEl = document.getElementById("authSuccess");
-      errEl.style.display = "none";
-      okEl.style.display = "none";
-
-      const { data, error } = await sb.auth.signUp({ email, password });
-      if (error) {
-        errEl.textContent = error.message;
-        errEl.style.display = "block";
-        return;
-      }
-      if (data?.session) {
-        closeAuthModal();
-      } else {
-        okEl.textContent = "Account created! Check your email for a confirmation link, or sign in.";
-        okEl.style.display = "block";
-      }
-    }
-
-    async function handleSignIn() {
-      const email = document.getElementById("authEmail").value.trim();
-      const password = document.getElementById("authPassword").value;
-      const errEl = document.getElementById("authError");
-      errEl.style.display = "none";
-
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) {
-        errEl.textContent = error.message;
-        errEl.style.display = "block";
-        return;
-      }
-      closeAuthModal();
-    }
-
-    async function signOutUser() {
-      await sb.auth.signOut();
-    }
-
-    async function saveCurrentScan() {
-      if (!currentUser) {
-        openAuthModal();
-        return;
-      }
-      const btn = document.getElementById("btnSaveScan");
-      btn.disabled = true;
-      btn.textContent = "Saving...";
-
-      const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
-      const totalReclaimable = state.spend.reduce((acc, item) => acc + (item.users ? item.users.length : 1), 0);
-
-      const { error } = await sb.from("audit_scans").insert({
-        user_id: currentUser.id,
-        workspace_name: state.workspaceName,
-        scan_mode: state.modeLabel,
-        total_users: state.totalUsers,
-        annual_savings: totalAnnual,
-        reclaimable_seats: totalReclaimable,
-        shadow_risks: state.shadow.length,
-        spend_findings: state.spend,
-        shadow_findings: state.shadow
-      });
-
-      btn.disabled = false;
-      btn.textContent = "Save Audit";
-
-      if (error) {
-        alert("Could not save scan: " + error.message);
-      } else {
-        alert("Audit saved to your workspace!");
-      }
-    }
-
-    async function openHistoryModal() {
-      if (!currentUser) {
-        openAuthModal();
-        return;
-      }
-      const modal = document.getElementById("historyModal");
-      const listEl = document.getElementById("historyList");
-      listEl.innerHTML = "<p style='color:var(--muted);'>Loading saved audits...</p>";
-      modal.classList.add("open");
-
-      const { data, error } = await sb
-        .from("audit_scans")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        listEl.innerHTML = `<p style="color:#fca5a5;">Error: ${escapeHtml(error.message)}</p>`;
-        return;
-      }
-      if (!data || data.length === 0) {
-        listEl.innerHTML = `<p style="color:var(--muted);">No saved audits yet. Run a scan and click "Save Audit".</p>`;
-        return;
-      }
-
-      window._savedScans = data;
-      listEl.innerHTML = data.map((row, idx) => `
-        <div class="history-item">
-          <div class="history-meta">
-            <strong>${escapeHtml(row.workspace_name)} — $${Number(row.annual_savings).toLocaleString()}/yr</strong>
-            <span>${new Date(row.created_at).toLocaleString()} &bull; ${row.reclaimable_seats} seats &bull; ${row.shadow_risks} risks</span>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn btn-primary btn-sm" onclick="loadSavedScan(${idx})">Load</button>
-            <button class="btn btn-danger-outline btn-sm" onclick="deleteSavedScan('${row.id}')">Delete</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function loadSavedScan(idx) {
-      const row = window._savedScans[idx];
-      if (!row) return;
-      state.spend = row.spend_findings || [];
-      state.shadow = row.shadow_findings || [];
-      state.totalUsers = row.total_users || 0;
-      state.workspaceName = row.workspace_name;
-      state.modeLabel = "Saved Audit (" + new Date(row.created_at).toLocaleDateString() + ")";
-      state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
-      document.getElementById("workspaceLabel").textContent = state.workspaceName;
-      document.getElementById("historyModal").classList.remove("open");
-      render();
-    }
-
-    async function deleteSavedScan(id) {
-      await sb.from("audit_scans").delete().eq("id", id);
-      openHistoryModal();
-    }
-
-    function render() {
-      const sim = computeSimulatedTotals();
-
-      document.getElementById("kpiSavings").textContent = "$" + sim.annual.toLocaleString();
-      document.getElementById("kpiMonthly").textContent = "$" + sim.monthly.toLocaleString() + " / month recoverable";
-      document.getElementById("kpiTriage").textContent = `${sim.disabledCount} Safe / ${sim.inactiveActiveCount} Review`;
-      document.getElementById("kpiTriageSub").textContent = `${sim.disabledCount} disabled (instant) · ${sim.inactiveActiveCount} inactive`;
-      document.getElementById("kpiShadow").textContent = state.shadow.length;
-      document.getElementById("kpiUsers").textContent = state.totalUsers;
-      document.getElementById("scanModeSub").textContent = state.modeLabel;
-
-      document.getElementById("countSpend").textContent = state.spend.length;
-      document.getElementById("countShadow").textContent = state.shadow.length;
-
-      const tbodySpend = document.getElementById("tbodySpend");
-      if (state.spend.length === 0) {
-        tbodySpend.innerHTML = `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused licenses or spend anomalies found.</td></tr>`;
-      } else {
-        tbodySpend.innerHTML = state.spend.map((item, idx) => {
-          const hasUsers = Array.isArray(item.users) && item.users.length > 0;
-          const isOpen = !!state.expandedRows[idx];
-          const viewBtn = hasUsers
-            ? `<button class="btn btn-outline btn-sm" onclick="toggleUserDrawer(${idx})">${isOpen ? "Hide" : "View"} Users (${item.users.length})</button>`
-            : "";
-          const psBtn = hasUsers
-            ? `<button class="btn btn-blue btn-sm" onclick="openPowerShellModal(${idx})">PowerShell</button>`
-            : "";
-
-          let drawerHtml = "";
-          if (hasUsers && isOpen) {
-            const userRows = item.users.map(u => {
-              const isDisabled = (u.status || "").includes("Disabled");
-              const triageBadge = isDisabled
-                ? `<span class="badge badge-safe">Instant Safe Reclaim</span>`
-                : `<span class="badge badge-med">Verify (${escapeHtml(u.status)})</span>`;
-              return `
-                <tr>
-                  <td><strong>${escapeHtml(u.name)}</strong></td>
-                  <td><code>${escapeHtml(u.upn)}</code></td>
-                  <td style="color:var(--muted);">${escapeHtml(u.department)}</td>
-                  <td>${triageBadge}</td>
-                  <td style="color:var(--muted);">${escapeHtml(u.last_signin)}</td>
-                </tr>
-              `;
-            }).join("");
-
-            drawerHtml = `
-              <tr class="user-drawer-row">
-                <td colspan="5">
-                  <div class="user-drawer-header">
-                    <span>Assigned Users Holding Unused ${escapeHtml(item.vendor)} Licenses</span>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                      <button class="btn btn-blue btn-sm" onclick="openPowerShellModal(${idx})">Generate PowerShell Script</button>
-                      <button class="btn btn-outline btn-sm" onclick="copyUpnList(${idx})">Copy UPN / Email List</button>
-                    </div>
-                  </div>
-                  <table class="sub-table">
-                    <thead>
-                      <tr>
-                        <th>Display Name</th>
-                        <th>Email / UPN</th>
-                        <th>Department</th>
-                        <th>Reclamation Triage</th>
-                        <th>Last Sign-In</th>
-                      </tr>
-                    </thead>
-                    <tbody>${userRows}</tbody>
-                  </table>
-                </td>
-              </tr>
-            `;
-          }
-
-          return `
-            <tr>
-              <td><strong>${escapeHtml(item.vendor)}</strong></td>
-              <td style="color:var(--muted);">${escapeHtml(item.signal)}</td>
-              <td>${escapeHtml(item.seats)}</td>
-              <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
-              <td>
-                <div class="action-cell">
-                  ${viewBtn}
-                  ${psBtn}
-                  <button class="btn btn-outline btn-sm" onclick="openTicket('spend', ${idx})">Ticket</button>
-                </div>
-              </td>
-            </tr>
-            ${drawerHtml}
-          `;
-        }).join("");
-      }
-
-      const tbodyShadow = document.getElementById("tbodyShadow");
-      tbodyShadow.innerHTML = state.shadow.length === 0
-        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No risky third-party OAuth grants detected.</td></tr>`
-        : state.shadow.map((item, idx) => {
-          const badgeClass = item.risk === "HIGH" ? "badge-high" : item.risk === "MEDIUM" ? "badge-med" : "badge-low";
-          return `
-            <tr>
-              <td><strong>${escapeHtml(item.app)}</strong></td>
-              <td style="color:var(--muted);">${escapeHtml(item.user)}</td>
-              <td><code>${escapeHtml(item.scopes)}</code></td>
-              <td><span class="badge ${badgeClass}">${escapeHtml(item.risk)}</span></td>
-              <td><button class="btn btn-outline btn-sm" onclick="openTicket('shadow', ${idx})">Revoke Ticket</button></td>
-            </tr>
-          `;
-        }).join("");
-    }
-
-    function toggleUserDrawer(idx) {
-      state.expandedRows[idx] = !state.expandedRows[idx];
-      render();
-    }
-
-    function copyUpnList(idx) {
-      const users = state.spend[idx]?.users || [];
-      const upns = users.map(u => u.upn).filter(Boolean).join("\n");
-      navigator.clipboard.writeText(upns);
-      alert(`Copied ${users.length} email/UPN address(es) to clipboard!`);
-    }
-
-    function loadSampleData() {
-      const copy = JSON.parse(JSON.stringify(SAMPLE_DATA));
-      state.spend = copy.spend;
-      state.shadow = copy.shadow;
-      state.totalUsers = copy.totalUsers;
-      state.workspaceName = copy.workspaceName;
-      state.modeLabel = copy.modeLabel;
-      state.expandedRows = { 0: true };
-      document.getElementById("workspaceLabel").textContent = state.workspaceName;
-      render();
-    }
-
-    function switchTab(tab) {
-      document.getElementById("tabSpend").classList.toggle("active", tab === "spend");
-      document.getElementById("tabShadow").classList.toggle("active", tab === "shadow");
-      document.getElementById("panelSpend").style.display = tab === "spend" ? "block" : "none";
-      document.getElementById("panelShadow").style.display = tab === "shadow" ? "block" : "none";
-    }
-
-    function openConnectModal() {
-      document.getElementById("scanError").style.display = "none";
-      document.getElementById("connectModal").classList.add("open");
-    }
-
-    function closeConnectModal() {
-      document.getElementById("connectModal").classList.remove("open");
-    }
-
-    async function runLiveEntraScan() {
-      const tenant_id = document.getElementById("inTenantId").value.trim();
-      const client_id = document.getElementById("inClientId").value.trim();
-      const client_secret = document.getElementById("inClientSecret").value.trim();
-      const inactive_days = parseInt(document.getElementById("inInactiveDays").value, 10) || 45;
-      const errEl = document.getElementById("scanError");
-      const btn = document.getElementById("btnRunScan");
-
-      if (!tenant_id || !client_id || !client_secret) {
-        errEl.textContent = "Please enter Tenant ID, Client ID, and Client Secret.";
-        errEl.style.display = "block";
-        return;
-      }
-
-      errEl.style.display = "none";
-      btn.disabled = true;
-      btn.textContent = "Scanning Graph API (may take ~20s if waking server)...";
-
-      try {
-        const res = await fetch(`${API_BASE}/api/scan/entra`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tenant_id, client_id, client_secret, inactive_days })
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.detail || "Entra ID scan failed.");
-        }
-
-        state.spend = data.spend || [];
-        state.shadow = data.shadow || [];
-        state.totalUsers = data.total_users || 0;
-        state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
-        state.workspaceName = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
-        state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
-
-        document.getElementById("workspaceLabel").textContent = state.workspaceName;
-        closeConnectModal();
-        render();
-      } catch (err) {
-        errEl.textContent = err.message;
-        errEl.style.display = "block";
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Run Live Audit";
-      }
-    }
-
-    function handleCsvUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const lines = evt.target.result.split(/\r?\n/).slice(1);
-        const map = {};
-        lines.forEach(line => {
-          const cols = line.split(",");
-          if (cols.length < 3) return;
-          const vendor = cols[1].replace(/["*]/g, "").trim().split(" ")[0].toUpperCase();
-          const amt = parseFloat(cols[2].replace(/[$,]/g, ""));
-          if (vendor && !isNaN(amt) && amt > 0) {
-            if (!map[vendor]) map[vendor] = { count: 0, monthly: 0 };
-            map[vendor].count += 1;
-            map[vendor].monthly += amt;
-          }
-        });
-        const csvFindings = Object.entries(map).map(([vendor, d]) => {
-          const annual = Math.round(d.monthly * 12);
-          return {
-            vendor: d.count > 1 ? `${vendor} (Duplicate)` : vendor,
-            signal: d.count > 1 ? `${d.count} separate recurring card charges` : `Recurring $${d.monthly.toFixed(0)}/mo charge`,
-            seats: `${d.count} line(s)`,
-            annual,
-            users: [],
-            ticket: `Subject: SaaS Spend Audit — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo.`
-          };
-        });
-        if (csvFindings.length > 0) {
-          state.spend = [...csvFindings, ...state.spend];
-          state.modeLabel = "Merged CSV + Tenant Data";
-          render();
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function openTicket(type, idx) {
-      const item = type === "spend" ? state.spend[idx] : state.shadow[idx];
-      document.getElementById("ticketContent").textContent = item.ticket;
-      document.getElementById("ticketModal").classList.add("open");
-    }
-
-    function copyTicketText() {
-      const text = document.getElementById("ticketContent").textContent;
-      navigator.clipboard.writeText(text);
-      alert("Remediation ticket copied to clipboard!");
-    }
-
-    function exportCsvReport() {
-      const rows = [["Category", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Annual_Waste_USD"]];
-      state.spend.forEach(s => {
-        if (Array.isArray(s.users) && s.users.length > 0) {
-          const perSeatAnnual = Math.round((Number(s.annual) || 0) / s.users.length);
-          s.users.forEach(u => {
-            rows.push(["Unused License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
-          });
-        } else {
-          rows.push(["Card SaaS Spend", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
-        }
-      });
-      state.shadow.forEach(sh => {
-        rows.push(["Shadow AI / OAuth", sh.app, sh.user, "", "", sh.scopes, "", 0]);
-      });
-      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "ZeroWaste-IT-Audit-Report.csv";
-      a.click();
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-    }
-
-    checkUpgradeRedirect();
-    loadSampleData();
-    initAuth();
-  </script>
-</body>
-</html>
+              <th>Vendor / License SKU
