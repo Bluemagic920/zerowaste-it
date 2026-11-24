@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZeroWaste IT — Automated SaaS Spend & Shadow AI Audit</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0b0f17;
@@ -22,13 +23,17 @@
     body { background: var(--bg); color: var(--text); line-height: 1.5; }
 
     nav {
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
       padding: 18px 6%; border-bottom: 1px solid var(--border);
       background: rgba(11, 15, 23, 0.92); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(8px);
     }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; }
     .brand-badge { background: var(--accent); color: #042f2e; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-size: 0.85rem; }
-    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .user-chip {
+      font-size: 0.8rem; color: var(--accent); background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 11px; border-radius: 999px;
+    }
 
     .btn {
       padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
@@ -38,6 +43,8 @@
     .btn-primary:hover { background: var(--accent-hover); }
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { background: var(--surface-2); }
+    .btn-danger-outline { background: transparent; border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .btn-danger-outline:hover { background: rgba(239, 68, 68, 0.12); }
     .btn-sm { padding: 6px 11px; font-size: 0.78rem; }
 
     .hero { padding: 56px 6% 36px; max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -84,7 +91,6 @@
     td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     .action-cell { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* Expandable User Drawer Row */
     .user-drawer-row td { background: var(--bg); padding: 16px 20px; border-bottom: 1px solid var(--border); }
     .user-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .user-drawer-header span { font-size: 0.82rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -105,7 +111,7 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      width: 100%; max-width: 560px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      width: 100%; max-width: 580px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
     }
     .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
     .modal p { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
@@ -121,13 +127,22 @@
       border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; color: #bfdbfe; margin-bottom: 16px;
     }
     .error-msg { color: #fca5a5; font-size: 0.82rem; margin-bottom: 12px; display: none; }
-    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+    .success-msg { color: #6ee7b7; font-size: 0.82rem; margin-bottom: 12px; display: none; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
 
     pre.ticket-box {
       background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem;
       white-space: pre-wrap; color: #e2e8f0; margin-top: 10px; max-height: 320px; overflow-y: auto;
     }
+
+    .history-list { max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+    }
+    .history-meta strong { display: block; font-size: 0.92rem; }
+    .history-meta span { font-size: 0.78rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -138,8 +153,12 @@
       <span>ZeroWaste IT</span>
     </div>
     <div class="nav-actions">
-      <button class="btn btn-outline btn-sm" onclick="loadSampleData()">Reset Demo Data</button>
+      <span class="user-chip" id="userEmailChip" style="display:none;"></span>
+      <button class="btn btn-outline btn-sm" id="btnHistory" style="display:none;" onclick="openHistoryModal()">Saved Audits</button>
+      <button class="btn btn-outline btn-sm" onclick="loadSampleData()">Reset Demo</button>
       <button class="btn btn-primary btn-sm" onclick="openConnectModal()">Connect Live Entra ID</button>
+      <button class="btn btn-outline btn-sm" id="btnAuthNav" onclick="openAuthModal()">Sign In</button>
+      <button class="btn btn-outline btn-sm" id="btnSignOut" style="display:none;" onclick="signOutUser()">Sign Out</button>
     </div>
   </nav>
 
@@ -164,6 +183,7 @@
           <span id="workspaceLabel">Interactive Sandbox — Acme Logistics (240 Employees)</span>
         </div>
         <div class="dash-controls">
+          <button class="btn btn-primary btn-sm" id="btnSaveScan" onclick="saveCurrentScan()">Save Audit to Workspace</button>
           <button class="btn btn-outline btn-sm" onclick="exportCsvReport()">Export CFO + User CSV</button>
         </div>
       </div>
@@ -228,11 +248,46 @@
     </div>
   </div>
 
+  <!-- Auth Modal -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal">
+      <h3 id="authModalTitle">Sign In to ZeroWaste IT</h3>
+      <p>Save your Entra ID and card spend audits to track reclaimed savings over time.</p>
+      <div class="form-group">
+        <label>Work Email</label>
+        <input type="email" id="authEmail" placeholder="you@company.com" />
+      </div>
+      <div class="form-group">
+        <label>Password (min 6 characters)</label>
+        <input type="password" id="authPassword" placeholder="••••••••" />
+      </div>
+      <div class="error-msg" id="authError"></div>
+      <div class="success-msg" id="authSuccess"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
+        <button class="btn btn-outline" onclick="handleSignUp()">Create Account</button>
+        <button class="btn btn-primary" onclick="handleSignIn()">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Saved Audits History Modal -->
+  <div class="modal-backdrop" id="historyModal">
+    <div class="modal">
+      <h3>Saved Workspace Audits</h3>
+      <p>Load any previous audit snapshot or delete old records.</p>
+      <div class="history-list" id="historyList">Loading...</div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="document.getElementById('historyModal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Connect Live Entra ID Modal -->
   <div class="modal-backdrop" id="connectModal">
     <div class="modal">
       <h3>Connect Live Microsoft Entra ID</h3>
-      <p>Credentials are used in-memory for a read-only Microsoft Graph scan and are never stored unless you save a workspace.</p>
+      <p>Credentials are used in-memory for a read-only Microsoft Graph scan and are never stored.</p>
       <div class="info-box">
         <strong>Required Read-Only App Permissions (Admin Consent):</strong><br/>
         <code>User.Read.All</code> &bull; <code>AuditLog.Read.All</code> &bull; <code>Application.Read.All</code>
@@ -276,17 +331,26 @@
 
   <script>
     const API_BASE = "https://zerowaste-it-api.onrender.com";
+    const SUPABASE_URL = "https://nhiqbcevcdxfzvrprgck.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VwM3o7h2Jxq9_2WkkdE4kg_WKU6bvP6";
 
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      db: { schema: "zerowaste" }
+    });
+
+    let currentUser = null;
     let state = {
       spend: [],
       shadow: [],
       expandedRows: {},
       totalUsers: 240,
+      workspaceName: "Interactive Sandbox — Acme Logistics (240 Employees)",
       modeLabel: "Sample Tenant Data"
     };
 
     const SAMPLE_DATA = {
       totalUsers: 240,
+      workspaceName: "Interactive Sandbox — Acme Logistics (240 Employees)",
       modeLabel: "Sample Tenant Data",
       spend: [
         {
@@ -332,6 +396,179 @@
         }
       ]
     };
+
+    // Auth State Sync
+    async function initAuth() {
+      const { data } = await sb.auth.getSession();
+      updateAuthUI(data?.session?.user || null);
+      sb.auth.onAuthStateChange((_event, session) => {
+        updateAuthUI(session?.user || null);
+      });
+    }
+
+    function updateAuthUI(user) {
+      currentUser = user;
+      const chip = document.getElementById("userEmailChip");
+      const btnAuth = document.getElementById("btnAuthNav");
+      const btnSignOut = document.getElementById("btnSignOut");
+      const btnHistory = document.getElementById("btnHistory");
+
+      if (user) {
+        chip.textContent = user.email;
+        chip.style.display = "inline-block";
+        btnAuth.style.display = "none";
+        btnSignOut.style.display = "inline-flex";
+        btnHistory.style.display = "inline-flex";
+      } else {
+        chip.style.display = "none";
+        btnAuth.style.display = "inline-flex";
+        btnSignOut.style.display = "none";
+        btnHistory.style.display = "none";
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById("authError").style.display = "none";
+      document.getElementById("authSuccess").style.display = "none";
+      document.getElementById("authModal").classList.add("open");
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.remove("open");
+    }
+
+    async function handleSignUp() {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      const errEl = document.getElementById("authError");
+      const okEl = document.getElementById("authSuccess");
+      errEl.style.display = "none";
+      okEl.style.display = "none";
+
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if (error) {
+        errEl.textContent = error.message;
+        errEl.style.display = "block";
+        return;
+      }
+      if (data?.session) {
+        closeAuthModal();
+      } else {
+        okEl.textContent = "Account created! Check your email for a confirmation link, or sign in.";
+        okEl.style.display = "block";
+      }
+    }
+
+    async function handleSignIn() {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      const errEl = document.getElementById("authError");
+      errEl.style.display = "none";
+
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) {
+        errEl.textContent = error.message;
+        errEl.style.display = "block";
+        return;
+      }
+      closeAuthModal();
+    }
+
+    async function signOutUser() {
+      await sb.auth.signOut();
+    }
+
+    async function saveCurrentScan() {
+      if (!currentUser) {
+        openAuthModal();
+        return;
+      }
+      const btn = document.getElementById("btnSaveScan");
+      btn.disabled = true;
+      btn.textContent = "Saving...";
+
+      const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
+      const totalReclaimable = state.spend.reduce((acc, item) => acc + (item.users ? item.users.length : 1), 0);
+
+      const { error } = await sb.from("audit_scans").insert({
+        user_id: currentUser.id,
+        workspace_name: state.workspaceName,
+        scan_mode: state.modeLabel,
+        total_users: state.totalUsers,
+        annual_savings: totalAnnual,
+        reclaimable_seats: totalReclaimable,
+        shadow_risks: state.shadow.length,
+        spend_findings: state.spend,
+        shadow_findings: state.shadow
+      });
+
+      btn.disabled = false;
+      btn.textContent = "Save Audit to Workspace";
+
+      if (error) {
+        alert("Could not save scan: " + error.message);
+      } else {
+        alert("Audit saved to your workspace!");
+      }
+    }
+
+    async function openHistoryModal() {
+      if (!currentUser) {
+        openAuthModal();
+        return;
+      }
+      const modal = document.getElementById("historyModal");
+      const listEl = document.getElementById("historyList");
+      listEl.innerHTML = "<p style='color:var(--muted);'>Loading saved audits...</p>";
+      modal.classList.add("open");
+
+      const { data, error } = await sb
+        .from("audit_scans")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        listEl.innerHTML = `<p style="color:#fca5a5;">Error: ${escapeHtml(error.message)}</p>`;
+        return;
+      }
+      if (!data || data.length === 0) {
+        listEl.innerHTML = `<p style="color:var(--muted);">No saved audits yet. Run a scan and click "Save Audit to Workspace".</p>`;
+        return;
+      }
+
+      window._savedScans = data;
+      listEl.innerHTML = data.map((row, idx) => `
+        <div class="history-item">
+          <div class="history-meta">
+            <strong>${escapeHtml(row.workspace_name)} — $${Number(row.annual_savings).toLocaleString()}/yr</strong>
+            <span>${new Date(row.created_at).toLocaleString()} &bull; ${row.reclaimable_seats} seats &bull; ${row.shadow_risks} risks</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary btn-sm" onclick="loadSavedScan(${idx})">Load</button>
+            <button class="btn btn-danger-outline btn-sm" onclick="deleteSavedScan('${row.id}')">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function loadSavedScan(idx) {
+      const row = window._savedScans[idx];
+      if (!row) return;
+      state.spend = row.spend_findings || [];
+      state.shadow = row.shadow_findings || [];
+      state.totalUsers = row.total_users || 0;
+      state.workspaceName = row.workspace_name;
+      state.modeLabel = "Saved Audit (" + new Date(row.created_at).toLocaleDateString() + ")";
+      state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
+      document.getElementById("workspaceLabel").textContent = state.workspaceName;
+      document.getElementById("historyModal").classList.remove("open");
+      render();
+    }
+
+    async function deleteSavedScan(id) {
+      await sb.from("audit_scans").delete().eq("id", id);
+      openHistoryModal();
+    }
 
     function render() {
       const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
@@ -447,9 +684,10 @@
       state.spend = copy.spend;
       state.shadow = copy.shadow;
       state.totalUsers = copy.totalUsers;
+      state.workspaceName = copy.workspaceName;
       state.modeLabel = copy.modeLabel;
-      state.expandedRows = { 0: true }; // Open first row by default so user list is immediately visible
-      document.getElementById("workspaceLabel").textContent = "Interactive Sandbox — Acme Logistics (240 Employees)";
+      state.expandedRows = { 0: true };
+      document.getElementById("workspaceLabel").textContent = state.workspaceName;
       render();
     }
 
@@ -503,9 +741,10 @@
         state.shadow = data.shadow || [];
         state.totalUsers = data.total_users || 0;
         state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
+        state.workspaceName = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
         state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
 
-        document.getElementById("workspaceLabel").textContent = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
+        document.getElementById("workspaceLabel").textContent = state.workspaceName;
         closeConnectModal();
         render();
       } catch (err) {
@@ -596,6 +835,7 @@
     }
 
     loadSampleData();
+    initAuth();
   </script>
 </body>
 </html>
