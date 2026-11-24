@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZeroWaste IT — Automated SaaS Spend & Shadow AI Audit</title>
+  <title>ZeroWaste IT — Automated Microsoft 365 &amp; Shadow IT Spend Audit</title>
+  <link rel="icon" type="image/jpeg" href="zerowaste-logo.jpg" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #0b0f17;
-      --surface: #121826;
+      --bg: #090d16;
+      --surface: #111827;
       --surface-2: #1a2234;
       --border: #263147;
-      --text: #f1f5f9;
+      --text: #f8fafc;
       --muted: #94a3b8;
       --accent: #10b981;
       --accent-hover: #059669;
+      --cyan: #06b6d4;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --blue: #3b82f6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     html { scroll-behavior: smooth; }
@@ -25,75 +26,52 @@
 
     nav {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-      padding: 18px 6%; border-bottom: 1px solid var(--border);
-      background: rgba(11, 15, 23, 0.92); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(8px);
+      padding: 14px 6%; border-bottom: 1px solid var(--border);
+      background: rgba(9, 13, 22, 0.94); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(8px);
     }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; }
-    .brand-badge { background: var(--accent); color: #042f2e; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-size: 0.85rem; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; text-decoration: none; color: var(--text); }
+    .brand-logo { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2); }
+    .brand-badge { background: linear-gradient(135deg, #10b981, #06b6d4); color: #04131c; font-weight: 900; padding: 4px 8px; border-radius: 7px; font-size: 0.85rem; }
     .nav-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .nav-link { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 10px; transition: 0.15s; }
     .nav-link:hover { color: var(--text); }
     .user-chip {
-      font-size: 0.8rem; color: var(--accent); background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 11px; border-radius: 999px;
+      font-size: 0.8rem; color: var(--accent); background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35); padding: 5px 11px; border-radius: 999px;
     }
-
-    .upgrade-banner {
-      display: none; background: rgba(16, 185, 129, 0.16); border-bottom: 1px solid rgba(16, 185, 129, 0.45);
-      color: #a7f3d0; padding: 12px 6%; text-align: center; font-size: 0.9rem; font-weight: 600;
-    }
-    .upgrade-banner.open { display: flex; justify-content: center; align-items: center; gap: 14px; }
 
     .btn {
       padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
       cursor: pointer; border: 1px solid transparent; transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none;
     }
-    .btn-primary { background: var(--accent); color: #042f2e; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-blue { background: rgba(59, 130, 246, 0.16); border-color: rgba(59, 130, 246, 0.45); color: #93c5fd; }
-    .btn-blue:hover { background: rgba(59, 130, 246, 0.28); }
+    .btn-primary { background: var(--accent); color: #041c13; }
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+    .btn-cyan { background: rgba(6, 182, 212, 0.16); border-color: rgba(6, 182, 212, 0.45); color: #67e8f9; }
+    .btn-cyan:hover { background: rgba(6, 182, 212, 0.28); }
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { background: var(--surface-2); }
-    .btn-danger-outline { background: transparent; border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
-    .btn-danger-outline:hover { background: rgba(239, 68, 68, 0.12); }
     .btn-sm { padding: 6px 11px; font-size: 0.78rem; }
     .btn-block { width: 100%; }
 
-    .hero { padding: 48px 6% 28px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .hero { padding: 40px 6% 28px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .hero-logo-wrap { display: flex; justify-content: center; margin-bottom: 16px; }
+    .hero-logo {
+      width: 92px; height: 92px; border-radius: 20px; object-fit: cover;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.22);
+    }
     .pill {
       display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
-      background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 16px;
+      background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.35); margin-bottom: 14px;
     }
-    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 14px; line-height: 1.15; }
-    .hero p { color: var(--muted); font-size: 1.06rem; max-width: 680px; margin: 0 auto 24px; }
+    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.15rem); font-weight: 800; letter-spacing: -0.03em; max-width: 900px; margin: 0 auto 14px; line-height: 1.15; }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 740px; margin: 0 auto 24px; }
     .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    .container { max-width: 1200px; margin: 0 auto 64px; padding: 0 6%; }
-
-    .roi-card {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(18, 24, 38, 0.98));
-      border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; padding: 24px 28px;
-      margin-bottom: 32px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: center;
-    }
-    @media (max-width: 840px) { .roi-card { grid-template-columns: 1fr; } }
-    .roi-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; }
-    .roi-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
-    .roi-sliders { display: flex; flex-direction: column; gap: 14px; }
-    .roi-row { display: flex; flex-direction: column; gap: 5px; }
-    .roi-row-head { display: flex; justify-content: space-between; font-size: 0.83rem; color: #cbd5e1; }
-    .roi-row-head strong { color: var(--accent); }
-    .roi-row input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
-    .roi-result-box {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center;
-    }
-    .roi-result-label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-    .roi-result-num { font-size: 2.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; margin: 6px 0; }
-    .roi-result-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
-    .roi-result-actions { display: flex; flex-direction: column; gap: 8px; }
-
+    .container { max-width: 1200px; margin: 0 auto 68px; padding: 0 6%; }
     .dashboard-shell {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
     }
     .demo-banner {
       background: rgba(245, 158, 11, 0.14); border-bottom: 1px solid rgba(245, 158, 11, 0.35);
@@ -101,6 +79,7 @@
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     }
     .demo-banner strong { color: #fbbf24; text-transform: uppercase; letter-spacing: 0.04em; }
+
     .dash-topbar {
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
       padding: 16px 24px; background: var(--surface-2); border-bottom: 1px solid var(--border);
@@ -110,34 +89,20 @@
     .status-dot.live { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
     .client-input {
       background: var(--bg); border: 1px solid var(--border); color: var(--text);
-      padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 240px;
+      padding: 6px 11px; border-radius: 6px; font-size: 0.83rem; min-width: 280px;
     }
     .client-input:focus { outline: none; border-color: var(--accent); }
     .dash-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
-    .simulator-bar {
-      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;
-      padding: 14px 24px; background: rgba(16, 185, 129, 0.06); border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-    .sim-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .sim-label { font-weight: 700; color: var(--accent); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.04em; }
-    .sim-select {
-      background: var(--bg); color: var(--text); border: 1px solid var(--border);
-      padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;
-    }
-    .sim-slider-wrap { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.82rem; }
-    .sim-slider-wrap input[type="range"] { accent-color: var(--accent); cursor: pointer; }
-
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; padding: 24px; }
     .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
     .kpi-label { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-    .kpi-val { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
+    .kpi-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
     .kpi-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
     .val-green { color: var(--accent); }
+    .val-cyan { color: var(--cyan); }
     .val-red { color: var(--danger); }
     .val-amber { color: var(--warning); }
-    .val-blue { color: var(--blue); }
 
     .tabs { display: flex; gap: 8px; padding: 0 24px; border-bottom: 1px solid var(--border); }
     .tab {
@@ -150,34 +115,11 @@
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
     th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 10px 12px; border-bottom: 1px solid var(--border); }
     td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .action-cell { display: flex; gap: 7px; flex-wrap: wrap; }
 
-    .user-drawer-row td { background: var(--bg); padding: 16px 20px; border-bottom: 1px solid var(--border); }
-    .user-drawer-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-    .user-drawer-header span { font-size: 0.82rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; }
-    .sub-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-    .sub-table th { padding: 7px 10px; font-size: 0.72rem; border-bottom: 1px solid var(--border); }
-    .sub-table td { padding: 8px 10px; border-bottom: 1px solid rgba(38, 49, 71, 0.5); }
-    .sub-table tr:last-child td { border-bottom: none; }
-
-    .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; display: inline-block; }
-    .badge-safe { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.35); }
-    .badge-high { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
-    .badge-med { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .badge-low { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
-
-    .trust-section { max-width: 1200px; margin: 0 auto 72px; padding: 0 6%; }
-    .trust-box {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px;
-    }
-    .trust-header { margin-bottom: 22px; }
-    .trust-header h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 6px; }
-    .trust-header p { color: var(--muted); font-size: 0.92rem; }
-    .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-    .trust-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-    .trust-item h4 { font-size: 0.92rem; color: var(--accent); margin-bottom: 6px; }
-    .trust-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-    .trust-item code { color: #e2e8f0; font-size: 0.78rem; }
+    .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.73rem; font-weight: 700; display: inline-block; }
+    .badge-waste { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .badge-shadow { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.35); }
 
     .pricing-section { max-width: 1200px; margin: 0 auto 90px; padding: 10px 6% 0; }
     .pricing-header { text-align: center; max-width: 680px; margin: 0 auto 40px; }
@@ -188,11 +130,9 @@
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px;
       display: flex; flex-direction: column; justify-content: space-between; position: relative;
     }
-    .plan-card.featured {
-      border-color: var(--accent); box-shadow: 0 20px 50px rgba(16, 185, 129, 0.14);
-    }
+    .plan-card.featured { border-color: var(--accent); box-shadow: 0 20px 50px rgba(16, 185, 129, 0.14); }
     .popular-tag {
-      position: absolute; top: -12px; right: 22px; background: var(--accent); color: #042f2e;
+      position: absolute; top: -12px; right: 22px; background: var(--accent); color: #041c13;
       font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
       padding: 4px 10px; border-radius: 999px;
     }
@@ -208,8 +148,9 @@
       border-top: 1px solid var(--border); padding: 28px 6%; text-align: center;
       color: var(--muted); font-size: 0.83rem;
     }
-    footer a { color: var(--accent); text-decoration: none; cursor: pointer; }
-    footer a:hover { text-decoration: underline; }
+    footer a { color: var(--accent); text-decoration: none; }
+    .footer-brand { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; margin-right: 6px; }
+    .footer-logo { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; }
 
     .modal-backdrop {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 100;
@@ -218,7 +159,7 @@
     .modal-backdrop.open { display: flex; }
     .modal {
       background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      width: 100%; max-width: 650px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      width: 100%; max-width: 620px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
       max-height: 92vh; overflow-y: auto;
     }
     .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
@@ -229,193 +170,109 @@
       width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--bg); color: var(--text); font-size: 0.9rem;
     }
-    .form-group input:focus { outline: none; border-color: var(--accent); }
     .info-box {
-      background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #bfdbfe; margin-bottom: 16px;
-    }
-    .ps-toggle-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-      background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 10px;
-      font-size: 0.82rem;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px; padding: 12px 14px; font-size: 0.8rem; color: #d1fae5; margin-bottom: 16px;
     }
     .error-msg { color: #fca5a5; font-size: 0.82rem; margin-bottom: 12px; display: none; }
-    .success-msg { color: #6ee7b7; font-size: 0.82rem; margin-bottom: 12px; display: none; }
-    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
-
-    pre.ticket-box {
+    pre.code-box {
       background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
-      white-space: pre-wrap; color: #e2e8f0; margin-top: 6px; max-height: 320px; overflow-y: auto; line-height: 1.45;
+      white-space: pre-wrap; color: #e2e8f0; margin-top: 6px; max-height: 300px; overflow-y: auto;
     }
-
-    .history-list { max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .history-item {
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
-    }
-    .history-meta strong { display: block; font-size: 0.92rem; }
-    .history-meta span { font-size: 0.78rem; color: var(--muted); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
 
-  <div class="upgrade-banner" id="upgradeBanner">
-    <span>Subscription active! Thank you for upgrading to ZeroWaste IT Pro.</span>
-    <button class="btn btn-outline btn-sm" onclick="dismissUpgradeBanner()">Dismiss</button>
-  </div>
-
   <nav>
-    <div class="brand">
-      <span class="brand-badge">ZW</span>
-      <span>ZeroWaste IT</span>
-    </div>
+    <a href="#" class="brand">
+      <img src="zerowaste-logo.jpg" alt="ZeroWaste IT" class="brand-logo" onerror="this.style.display='none';document.getElementById('zwFallbackBadge').style.display='inline-block';" />
+      <span class="brand-badge" id="zwFallbackBadge" style="display:none;">ZW</span>
+      <span>ZeroWaste <span style="color:var(--accent);">IT</span></span>
+    </a>
     <div class="nav-actions">
-      <a href="#estimator" class="nav-link">ROI Calculator</a>
-      <a href="#security" class="nav-link">Security &amp; Permissions</a>
+      <a href="#audit" class="nav-link">Spend Audit</a>
       <a href="#pricing" class="nav-link">Pricing</a>
-      <span class="user-chip" id="userEmailChip" style="display:none;"></span>
-      <button class="btn btn-outline btn-sm" id="btnHistory" style="display:none;" onclick="openHistoryModal()">Saved Audits</button>
       <button class="btn btn-outline btn-sm" onclick="loadSampleData()">Reset Demo</button>
-      <button class="btn btn-primary btn-sm" onclick="openConnectModal()">Connect Live Entra ID</button>
-      <button class="btn btn-outline btn-sm" id="btnAuthNav" onclick="openAuthModal()">Sign In</button>
-      <button class="btn btn-outline btn-sm" id="btnSignOut" style="display:none;" onclick="signOutUser()">Sign Out</button>
+      <button class="btn btn-primary btn-sm" onclick="openConnectModal()">Run M365 Spend Scan</button>
     </div>
   </nav>
 
   <section class="hero">
-    <div class="pill">Read-Only Microsoft Graph + Card Spend Audit</div>
-    <h1>Stop Paying for Unused M365 Seats &amp; Unapproved Shadow AI</h1>
-    <p>Pinpoint dormant E3/E5/Copilot licenses down to the exact employee email, generate one-click PowerShell reclamation scripts, and export board-ready CFO PDF reports.</p>
+    <div class="hero-logo-wrap">
+      <img src="zerowaste-logo.jpg" alt="ZeroWaste IT Shield Logo" class="hero-logo" onerror="this.parentElement.style.display='none';" />
+    </div>
+    <div class="pill">Read-Only Microsoft 365 License &amp; Shadow IT Spend Audit</div>
+    <h1>Stop Paying for Unused M365 Licenses &amp; Unapproved SaaS Apps.</h1>
+    <p>Scan your Microsoft 365 tenant in minutes using read-only Microsoft Graph permissions. Identify inactive seats, disabled accounts still consuming paid licenses, and shadow IT OAuth apps—with dry-run PowerShell reclaim scripts.</p>
     <div class="hero-cta">
-      <button class="btn btn-primary" onclick="openConnectModal()">Run Live Entra ID Scan</button>
-      <label class="btn btn-outline" style="cursor:pointer;">
-        Upload Card CSV
-        <input type="file" id="csvInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(event)" />
-      </label>
-      <button class="btn btn-outline" onclick="loadSampleCardCsv()">Load Sample Card CSV</button>
+      <button class="btn btn-primary" onclick="openConnectModal()">Run Read-Only Spend Scan</button>
+      <button class="btn btn-cyan" onclick="exportSavingsCsv()">Export Savings CSV</button>
       <a href="#pricing" class="btn btn-outline">View Plans</a>
     </div>
   </section>
 
-  <div class="container">
-    <div class="roi-card" id="estimator">
-      <div>
-        <div class="roi-title">60-Second SaaS &amp; M365 Waste Estimator</div>
-        <div class="roi-sub">No login or tenant credentials required. Estimate potential annual recoverable spend and copy a CFO business-case email.</div>
-        <div class="roi-sliders">
-          <div class="roi-row">
-            <div class="roi-row-head">
-              <span>Total Employees / Licensed Users</span>
-              <strong id="calcEmpVal">250 users</strong>
-            </div>
-            <input type="range" id="calcEmp" min="25" max="2500" step="25" value="250" oninput="updateRoiCalculator()" />
-          </div>
-          <div class="roi-row">
-            <div class="roi-row-head">
-              <span>Premium M365 E5 ($57/mo) &amp; Copilot ($30/mo) Seats</span>
-              <strong id="calcPremVal">60 seats</strong>
-            </div>
-            <input type="range" id="calcPrem" min="0" max="1000" step="10" value="60" oninput="updateRoiCalculator()" />
-          </div>
-          <div class="roi-row">
-            <div class="roi-row-head">
-              <span>Months Since Last Manual License Audit</span>
-              <strong id="calcMonthsVal">6 months</strong>
-            </div>
-            <input type="range" id="calcMonths" min="1" max="24" step="1" value="6" oninput="updateRoiCalculator()" />
-          </div>
-        </div>
-      </div>
-
-      <div class="roi-result-box">
-        <div class="roi-result-label">Estimated Annual Recoverable Spend</div>
-        <div class="roi-result-num" id="calcTotal">$18,480/yr</div>
-        <div class="roi-result-note" id="calcRoiNote">Projected savings vs. ZeroWaste IT Starter ($79/mo)</div>
-        <div class="roi-result-actions">
-          <button class="btn btn-primary btn-block" onclick="openConnectModal()">Verify with Live Entra Scan</button>
-          <button class="btn btn-outline btn-block btn-sm" onclick="copyCfoApprovalEmail()">Copy CFO / Boss Approval Email</button>
-        </div>
-      </div>
-    </div>
-
+  <div class="container" id="audit">
     <div class="dashboard-shell">
       <div class="demo-banner" id="demoBanner">
         <div>
-          <strong>Interactive Sample Sandbox:</strong> Displayed company ("Acme Logistics"), employee names, and dollar figures are simulated demo data. Connect Entra ID or upload a card CSV to audit real data.
+          <strong>Sample Tenant Sandbox:</strong> Displayed company ("Acme Logistics Group"), licenses, and Shadow IT apps are simulated demo data. Connect a Microsoft 365 tenant to scan live data.
         </div>
-        <button class="btn btn-outline btn-sm" onclick="openConnectModal()">Switch to Live Scan</button>
+        <button class="btn btn-outline btn-sm" onclick="openConnectModal()">Connect M365 Tenant</button>
       </div>
 
       <div class="dash-topbar">
         <div class="dash-title">
           <span class="status-dot" id="statusDot"></span>
-          <input type="text" class="client-input" id="workspaceInput" value="Sample Tenant — Acme Logistics (240 Employees)" onchange="updateWorkspaceName(this.value)" title="Edit client or company name for PDF/CSV exports" />
+          <input type="text" class="client-input" id="workspaceInput" value="Sample Tenant — Acme Logistics Group (240 Seats)" onchange="state.workspaceName = this.value" />
         </div>
         <div class="dash-controls">
-          <button class="btn btn-primary btn-sm" id="btnSaveScan" onclick="saveCurrentScan()">Save Audit</button>
-          <button class="btn btn-blue btn-sm" onclick="openPowerShellModal(-1)">Bulk PowerShell Script</button>
-          <button class="btn btn-outline btn-sm" onclick="exportExecutivePdf()">Export Executive PDF</button>
-          <button class="btn btn-outline btn-sm" onclick="exportCsvReport()">Export CSV</button>
-        </div>
-      </div>
-
-      <div class="simulator-bar">
-        <div class="sim-group">
-          <span class="sim-label">What-If License Simulator:</span>
-          <select class="sim-select" id="simActionMode" onchange="render()">
-            <option value="revoke">Full License Reclamation (100% Savings)</option>
-            <option value="downgrade">Downgrade E5 &rarr; E3 ($21/mo Saved/Seat)</option>
-            <option value="disabled_only">Disabled Accounts Only (Check Retention First)</option>
-          </select>
-        </div>
-        <div class="sim-slider-wrap">
-          <span>Target Reclaim Rate:</span>
-          <input type="range" id="simPctSlider" min="25" max="100" step="5" value="100" oninput="render()" />
-          <strong id="simPctLabel" style="color:var(--text);">100%</strong>
+          <button class="btn btn-cyan btn-sm" onclick="exportSavingsCsv()">Export CSV Report</button>
+          <button class="btn btn-primary btn-sm" onclick="openScriptModal()">Copy Reclaim Script (-WhatIf)</button>
         </div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-label">Potential License Savings</div>
-          <div class="kpi-val val-green" id="kpiSavings">$0</div>
-          <div class="kpi-sub" id="kpiMonthly">$0 / month from dormant seats</div>
+          <div class="kpi-label">Est. Annual Savings</div>
+          <div class="kpi-val val-green" id="kpiAnnual">$0</div>
+          <div class="kpi-sub" id="kpiMonthly">$0 / month recoverable</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Card Spend Under Review</div>
-          <div class="kpi-val val-amber" id="kpiCardReview">$0</div>
-          <div class="kpi-sub" id="kpiCardReviewSub">Flagged card lines (verify overlap)</div>
+          <div class="kpi-label">Reclaimable Licenses</div>
+          <div class="kpi-val val-red" id="kpiWasteSeats">0</div>
+          <div class="kpi-sub">Disabled or inactive 60+ days</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Disabled vs. Inactive Users</div>
-          <div class="kpi-val val-blue" id="kpiTriage">0 / 0</div>
-          <div class="kpi-sub">Check hold/retention before revoking</div>
+          <div class="kpi-label">Shadow IT Apps</div>
+          <div class="kpi-val val-amber" id="kpiShadowApps">0</div>
+          <div class="kpi-sub">Third-party OAuth apps detected</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Third-Party OAuth Grants</div>
-          <div class="kpi-val val-red" id="kpiShadow">0</div>
-          <div class="kpi-sub" id="scanModeSub">Simulated Sample Data</div>
+          <div class="kpi-label">Total Directory Users</div>
+          <div class="kpi-val val-cyan" id="kpiUsers">240</div>
+          <div class="kpi-sub" id="scanModeSub">Simulated Demo Data</div>
         </div>
       </div>
 
       <div class="tabs">
-        <div class="tab active" id="tabSpend" onclick="switchTab('spend')">License &amp; Card Spend Findings (<span id="countSpend">0</span>)</div>
-        <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow AI &amp; OAuth Grants (<span id="countShadow">0</span>)</div>
+        <div class="tab active" id="tabLicenses" onclick="switchTab('licenses')">Unused &amp; Disabled Licenses (<span id="countLicenses">0</span>)</div>
+        <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow IT &amp; OAuth Apps (<span id="countShadow">0</span>)</div>
       </div>
 
-      <div class="table-wrap" id="panelSpend">
+      <div class="table-wrap" id="panelLicenses">
         <table>
           <thead>
             <tr>
-              <th>Vendor / License SKU</th>
-              <th>Detection Signal &amp; Classification</th>
-              <th>Affected Seats / Lines</th>
-              <th>Annual Impact</th>
-              <th>Actions</th>
+              <th>User</th>
+              <th>UPN</th>
+              <th>Assigned SKU</th>
+              <th>Status / Inactivity</th>
+              <th>Est. Monthly Waste</th>
             </tr>
           </thead>
-          <tbody id="tbodySpend"></tbody>
+          <tbody id="tbodyLicenses"></tbody>
         </table>
       </div>
 
@@ -423,11 +280,10 @@
         <table>
           <thead>
             <tr>
-              <th>Connected App &amp; Publisher</th>
-              <th>Consent Scope</th>
-              <th>Granted Permissions</th>
-              <th>Risk</th>
-              <th>Action</th>
+              <th>Application Name</th>
+              <th>App ID</th>
+              <th>Risk / Scope Note</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody id="tbodyShadow"></tbody>
@@ -436,189 +292,83 @@
     </div>
   </div>
 
-  <!-- Security, Permissions & Data Governance Section -->
-  <section class="trust-section" id="security">
-    <div class="trust-box">
-      <div class="trust-header">
-        <h2>Security, Microsoft Graph Permissions &amp; Data Handling</h2>
-        <p>Built on least-privilege, read-only architecture so your security team can approve an audit in minutes.</p>
-      </div>
-      <div class="trust-grid">
-        <div class="trust-item">
-          <h4>1. Strictly Read-Only Graph Scopes</h4>
-          <p>ZeroWaste IT never requests write access to your tenant. Live scans only use three read-only application permissions: <code>User.Read.All</code>, <code>AuditLog.Read.All</code>, and <code>Application.Read.All</code>.</p>
-        </div>
-        <div class="trust-item">
-          <h4>2. Zero Credential Storage</h4>
-          <p>Your Tenant ID, Client ID, and Client Secret are transmitted over TLS, held strictly in memory for the duration of the Graph query, and immediately discarded. You can revoke the App Registration at any time.</p>
-        </div>
-        <div class="trust-item">
-          <h4>3. Retention &amp; Compliance Safe</h4>
-          <p>ZeroWaste IT never modifies your Entra ID tenant directly. PowerShell reclamation scripts default to <code>-WhatIf</code> dry-run mode so admins can verify Exchange Litigation Hold or mailbox retention first.</p>
-        </div>
-        <div class="trust-item">
-          <h4>4. Optional Workspace Storage &amp; Support</h4>
-          <p>Audit snapshots are only saved if you sign in and click <strong>Save Audit</strong> (protected by Row-Level Security in Supabase). Questions or security questionnaires? Email <strong>support@profitharborai.com</strong>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="pricing-section" id="pricing">
     <div class="pricing-header">
-      <div class="pill">Transparent Pricing &bull; Cancel Anytime</div>
-      <h2>Simple, Predictable Plans</h2>
-      <p>Reclaiming just two unused Microsoft 365 E5 seats ($114/mo) or three Copilot seats ($90/mo) covers the $79/mo Starter plan.</p>
+      <div class="pill">Simple Transparent Pricing</div>
+      <h2>Pays for Itself With Just a Few Reclaimed Seats</h2>
+      <p>Run read-only license waste and Shadow IT audits across single tenants or multiple MSP clients.</p>
     </div>
 
     <div class="pricing-grid">
       <div class="plan-card">
         <div>
-          <div class="plan-name">ZeroWaste IT Starter</div>
-          <div class="plan-desc">For single-tenant IT admins auditing dormant seats &amp; card spend.</div>
-          <div class="plan-price">$79<span>/mo</span></div>
-          <div class="plan-roi">Covered by reclaiming 2 E5 seats ($114/mo) or 3 Copilot seats ($90/mo)</div>
+          <div class="plan-name">Starter</div>
+          <div class="plan-desc">For single-tenant IT teams auditing Microsoft 365 license spend.</div>
+          <div class="plan-price">$99<span>/mo</span></div>
+          <div class="plan-roi">Up to 500 directory users</div>
           <ul class="plan-features">
-            <li>1 Microsoft Entra ID tenant (up to 250 users)</li>
-            <li>Dormant E3, E5 &amp; Copilot license detection</li>
-            <li>One-click PowerShell reclamation scripts (-WhatIf)</li>
-            <li>Shadow AI &amp; OAuth permission audit</li>
-            <li>Corporate card CSV multi-charge scanner</li>
+            <li>Disabled &amp; inactive M365 license detection</li>
+            <li>Shadow IT &amp; third-party OAuth app discovery</li>
+            <li>Dry-run (-WhatIf) PowerShell reclaim scripts</li>
+            <li>CSV savings &amp; audit export</li>
           </ul>
         </div>
-        <button class="btn btn-outline btn-block" onclick="checkoutPlan('starter')">Start with Starter</button>
+        <button class="btn btn-outline btn-block" onclick="openConnectModal()">Run Starter Audit</button>
       </div>
 
       <div class="plan-card featured">
         <span class="popular-tag">Most Popular</span>
         <div>
-          <div class="plan-name">ZeroWaste IT Growth</div>
-          <div class="plan-desc">For growing IT &amp; finance teams tracking multi-department savings.</div>
-          <div class="plan-price">$199<span>/mo</span></div>
-          <div class="plan-roi">Covered by reclaiming 4 E5 seats ($228/mo)</div>
+          <div class="plan-name">Growth</div>
+          <div class="plan-desc">For mid-sized organizations with multi-department SaaS &amp; M365 seats.</div>
+          <div class="plan-price">$249<span>/mo</span></div>
+          <div class="plan-roi">Up to 2,500 directory users</div>
           <ul class="plan-features">
-            <li>Up to 3 Microsoft Entra ID tenants (1,500 users)</li>
-            <li>Unlimited live Microsoft Graph API scans</li>
-            <li>Saved workspace audit history &amp; snapshots</li>
-            <li>Board-ready CFO Executive PDF &amp; CSV exports</li>
-            <li>Retention-aware triage + bulk UPN export</li>
+            <li>Everything in Starter</li>
+            <li>Custom inactivity thresholds (30 / 60 / 90 days)</li>
+            <li>Executive annual ROI &amp; CSV reporting</li>
+            <li>Priority onboarding &amp; support</li>
           </ul>
         </div>
-        <button class="btn btn-primary btn-block" onclick="checkoutPlan('growth')">Subscribe to Growth</button>
+        <button class="btn btn-primary btn-block" onclick="openConnectModal()">Run Growth Audit</button>
       </div>
 
       <div class="plan-card">
         <div>
-          <div class="plan-name">ZeroWaste IT MSP / CFO</div>
-          <div class="plan-desc">For Managed Service Providers &amp; Fractional CFOs auditing client fleets.</div>
+          <div class="plan-name">MSP Partner</div>
+          <div class="plan-desc">For Managed Service Providers running QBR spend audits across client tenants.</div>
           <div class="plan-price">$499<span>/mo</span></div>
-          <div class="plan-roi">Turnkey SaaS audit deliverable for client QBRs</div>
+          <div class="plan-roi">Unlimited client M365 tenants</div>
           <ul class="plan-features">
-            <li>Unlimited client Microsoft Entra ID tenants</li>
-            <li>Unlimited employee seats audited</li>
-            <li>Custom client branding on Executive PDFs</li>
-            <li>Multi-client saved audit workspaces</li>
-            <li>Bulk PowerShell scripts &amp; priority support</li>
+            <li>Unlimited client Microsoft 365 scans</li>
+            <li>Client-branded CSV &amp; QBR savings summaries</li>
+            <li>Bulk license reclamation PowerShell templates</li>
+            <li>Direct partner support</li>
           </ul>
         </div>
-        <button class="btn btn-outline btn-block" onclick="checkoutPlan('msp')">Subscribe to MSP / CFO</button>
+        <button class="btn btn-outline btn-block" onclick="openConnectModal()">Run MSP Audit</button>
       </div>
     </div>
   </section>
 
   <footer>
-    &copy; 2026 ProfitHarbor AI &bull; ZeroWaste IT (zerowaste.profitharborai.com) &bull;
-    <a onclick="document.getElementById('privacyModal').classList.add('open')">Privacy &amp; Data Policy</a> &bull;
+    <span class="footer-brand">
+      <img src="zerowaste-logo.jpg" alt="" class="footer-logo" onerror="this.style.display='none';" />
+      <strong>ZeroWaste IT</strong>
+    </span>
+    &copy; 2026 ProfitHarbor AI &bull; Read-Only Microsoft 365 License &amp; Shadow IT Spend Auditing &bull;
     Support: <a href="mailto:support@profitharborai.com">support@profitharborai.com</a>
   </footer>
 
-  <!-- Privacy & Data Policy Modal -->
-  <div class="modal-backdrop" id="privacyModal">
-    <div class="modal">
-      <h3>ZeroWaste IT — Privacy &amp; Data Retention Policy</h3>
-      <p>Effective November 2026 &bull; Operated by ProfitHarbor AI</p>
-      <div class="info-box" style="color:#e2e8f0;line-height:1.6;">
-        <strong>1. Entra ID Credentials:</strong> Tenant IDs, Client IDs, and Client Secrets submitted for live scans are used strictly in-memory to authenticate against Microsoft Graph and are never written to disk or database tables.<br/><br/>
-        <strong>2. Card CSV Uploads:</strong> Corporate card CSV files are parsed locally in your browser via JavaScript FileReader; raw CSV files are not uploaded to our servers.<br/><br/>
-        <strong>3. Saved Audit Snapshots:</strong> Only when you explicitly sign in and click "Save Audit" are summary metrics and findings stored in our encrypted Supabase database under Row-Level Security (RLS) tied to your user ID. You can delete any saved snapshot at any time.<br/><br/>
-        <strong>4. Contact:</strong> For data deletion or security inquiries, contact <strong>support@profitharborai.com</strong>.
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-primary" onclick="document.getElementById('privacyModal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- PowerShell Reclamation Modal -->
-  <div class="modal-backdrop" id="psModal">
-    <div class="modal">
-      <h3 id="psModalTitle">Microsoft Graph PowerShell Reclamation Script</h3>
-      <p>Run in PowerShell 7+ with <code>User.ReadWrite.All</code> &amp; <code>Organization.Read.All</code>. Verify Exchange retention/holds before removing licenses.</p>
-      <div class="ps-toggle-bar">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:var(--accent);">
-          <input type="checkbox" id="psWhatIfCheck" checked onchange="refreshPowerShellCode()" />
-          Safe Dry-Run Mode (-WhatIf enabled)
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);">
-          <input type="checkbox" id="psDisabledOnlyCheck" onchange="refreshPowerShellCode()" />
-          Disabled Accounts Only
-        </label>
-      </div>
-      <pre class="ticket-box" id="psContent"></pre>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('psModal').classList.remove('open')">Close</button>
-        <button class="btn btn-primary" onclick="copyPowerShellText()">Copy PowerShell Script</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Auth Modal -->
-  <div class="modal-backdrop" id="authModal">
-    <div class="modal">
-      <h3 id="authModalTitle">Sign In to ZeroWaste IT</h3>
-      <p>Save your Entra ID and card spend audits to track reclaimed savings over time.</p>
-      <div class="form-group">
-        <label>Work Email</label>
-        <input type="email" id="authEmail" placeholder="you@company.com" />
-      </div>
-      <div class="form-group">
-        <label>Password (min 6 characters)</label>
-        <input type="password" id="authPassword" placeholder="••••••••" />
-      </div>
-      <div class="error-msg" id="authError"></div>
-      <div class="success-msg" id="authSuccess"></div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
-        <button class="btn btn-outline" onclick="handleSignUp()">Create Account</button>
-        <button class="btn btn-primary" onclick="handleSignIn()">Sign In</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Saved Audits History Modal -->
-  <div class="modal-backdrop" id="historyModal">
-    <div class="modal">
-      <h3>Saved Workspace Audits</h3>
-      <p>Load any previous audit snapshot or delete old records.</p>
-      <div class="history-list" id="historyList">Loading...</div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('historyModal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Connect Live Entra ID Modal -->
+  <!-- Connect Modal -->
   <div class="modal-backdrop" id="connectModal">
     <div class="modal">
-      <h3>Connect Live Microsoft Entra ID</h3>
-      <p>Credentials are used in-memory for a read-only Microsoft Graph scan and are never stored.</p>
+      <h3>Connect Microsoft 365 Tenant (Read-Only)</h3>
+      <p>ZeroWaste IT uses read-only Microsoft Graph permissions (<code>User.Read.All</code>, <code>AuditLog.Read.All</code>, <code>Application.Read.All</code>). Credentials stay in memory for the scan and are never saved.</p>
       <div class="info-box">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <div>
-            <strong>Required Read-Only Permissions:</strong><br/>
-            <code>User.Read.All</code> &bull; <code>AuditLog.Read.All</code> &bull; <code>Application.Read.All</code>
-          </div>
-          <button class="btn btn-blue btn-sm" onclick="copyEntraSetupScript()">Copy 10-Sec Setup Script</button>
+          <div><strong>Quick Setup:</strong> Create a read-only Entra ID App Registration with admin consent.</div>
+          <button class="btn btn-primary btn-sm" onclick="copySetupScript()">Copy Azure CLI Script</button>
         </div>
       </div>
       <div class="form-group">
@@ -631,742 +381,164 @@
       </div>
       <div class="form-group">
         <label>Client Secret Value</label>
-        <input type="password" id="inClientSecret" placeholder="Enter Entra App Client Secret" />
-      </div>
-      <div class="form-group">
-        <label>Inactivity Threshold (Days)</label>
-        <input type="number" id="inInactiveDays" value="45" min="7" max="365" />
+        <input type="password" id="inClientSecret" placeholder="Enter Read-Only App Secret" />
       </div>
       <div class="error-msg" id="scanError"></div>
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeConnectModal()">Cancel</button>
-        <button class="btn btn-primary" id="btnRunScan" onclick="runLiveEntraScan()">Run Live Audit</button>
+        <button class="btn btn-outline" onclick="document.getElementById('connectModal').classList.remove('open')">Cancel</button>
+        <button class="btn btn-primary" id="btnRunScan" onclick="runLiveScan()">Run Spend Audit</button>
       </div>
     </div>
   </div>
 
-  <!-- Ticket Modal -->
-  <div class="modal-backdrop" id="ticketModal">
+  <!-- PowerShell Modal -->
+  <div class="modal-backdrop" id="scriptModal">
     <div class="modal">
-      <h3>IT Remediation &amp; Review Ticket</h3>
-      <p>Includes exact affected user emails and retention/approval checks before taking action.</p>
-      <pre class="ticket-box" id="ticketContent"></pre>
+      <h3>Dry-Run License Reclaim PowerShell (-WhatIf)</h3>
+      <p>Review affected accounts and retention holds before removing paid Microsoft 365 licenses.</p>
+      <pre class="code-box" id="scriptBox"></pre>
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="document.getElementById('ticketModal').classList.remove('open')">Close</button>
-        <button class="btn btn-primary" onclick="copyTicketText()">Copy Ticket</button>
+        <button class="btn btn-outline" onclick="document.getElementById('scriptModal').classList.remove('open')">Close</button>
+        <button class="btn btn-primary" onclick="copyScriptBox()">Copy PowerShell</button>
       </div>
     </div>
   </div>
 
   <script>
     const API_BASE = "https://zerowaste-it-api.onrender.com";
-    const SUPABASE_URL = "https://nhiqbcevcdxfzvrprgck.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VwM3o7h2Jxq9_2WkkdE4kg_WKU6bvP6";
 
-    const STRIPE_LINKS = {
-      starter: "https://buy.stripe.com/3cIbJ08472Le3dt4frfnO00",
-      growth: "https://buy.stripe.com/7sY00idor99CaFVbHTfnO01",
-      msp: "https://buy.stripe.com/8x2aEWfwz99C15leU5fnO02"
-    };
-
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      db: { schema: "zerowaste" }
-    });
-
-    let currentUser = null;
-    let activePsIdx = -1;
     let state = {
-      spend: [],
-      shadow: [],
-      expandedRows: {},
-      totalUsers: 240,
       isDemo: true,
-      workspaceName: "Sample Tenant — Acme Logistics (240 Employees)",
-      modeLabel: "Simulated Sample Data"
+      workspaceName: "Sample Tenant — Acme Logistics Group (240 Seats)",
+      modeLabel: "Simulated Demo Data",
+      totalUsers: 240,
+      licenses: [],
+      shadowApps: []
     };
 
-    const SAMPLE_DATA = {
-      totalUsers: 240,
-      isDemo: true,
-      workspaceName: "Sample Tenant — Acme Logistics (240 Employees)",
-      modeLabel: "Simulated Sample Data",
-      spend: [
-        {
-          vendor: "Microsoft 365 E5",
-          skuPartNumber: "SPE_E5",
-          classification: "Dormant License",
-          signal: "4 licensed user(s) inactive 45+ days (2 disabled)",
-          seats: "4 @ $57/mo",
-          annual: 2736,
-          users: [
-            { name: "Marcus Vance", upn: "mvance@acmelogistics.com", department: "Operations", status: "Account Disabled", last_signin: "2026-08-14" },
-            { name: "Elena Rostova", upn: "erostova@acmelogistics.com", department: "Finance", status: "Inactive 74d", last_signin: "2026-09-11" },
-            { name: "Devon Brooks", upn: "dbrooks@acmelogistics.com", department: "Sales", status: "Account Disabled", last_signin: "2026-07-29" },
-            { name: "Hannah Kim", upn: "hkim@acmelogistics.com", department: "Marketing", status: "Inactive 58d", last_signin: "2026-09-27" }
-          ],
-          ticket: "Subject: Reclaim 4 Unused Microsoft 365 E5 Licenses ($2,736/yr)\n\nAffected Users to Review/Revoke:\n- Marcus Vance (mvance@acmelogistics.com) | Operations | Account Disabled (Verify mailbox hold)\n- Elena Rostova (erostova@acmelogistics.com) | Finance | Inactive 74d\n- Devon Brooks (dbrooks@acmelogistics.com) | Sales | Account Disabled (Verify mailbox hold)\n- Hannah Kim (hkim@acmelogistics.com) | Marketing | Inactive 58d\n\nAction: Confirm Exchange retention/Litigation Hold status, then remove or downgrade SKU in Entra Admin Center."
-        },
-        {
-          vendor: "Microsoft 365 Copilot",
-          skuPartNumber: "Microsoft_365_Copilot",
-          classification: "Dormant License",
-          signal: "3 licensed user(s) inactive 45+ days (1 disabled)",
-          seats: "3 @ $30/mo",
-          annual: 1080,
-          users: [
-            { name: "Trevor Jenkins", upn: "tjenkins@acmelogistics.com", department: "Logistics", status: "Inactive 63d", last_signin: "2026-09-22" },
-            { name: "Priya Nair", upn: "pnair@acmelogistics.com", department: "HR", status: "Account Disabled", last_signin: "2026-08-03" },
-            { name: "Samir Patel", upn: "spatel@acmelogistics.com", department: "Procurement", status: "Inactive 51d", last_signin: "2026-10-04" }
-          ],
-          ticket: "Subject: Reclaim 3 Unused Microsoft 365 Copilot Licenses ($1,080/yr)\n\nAffected Users to Review/Revoke:\n- Trevor Jenkins (tjenkins@acmelogistics.com) | Logistics | Inactive 63d\n- Priya Nair (pnair@acmelogistics.com) | HR | Account Disabled\n- Samir Patel (spatel@acmelogistics.com) | Procurement | Inactive 51d\n\nAction: Reassign Copilot seats to active power users."
-        }
-      ],
-      shadow: [
-        {
-          app: "Otter.ai Meeting Notetaker (Unverified Publisher)",
-          user: "User / Admin OAuth Consent",
-          scopes: "Calendars.Read, Mail.Read",
-          risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — Otter.ai Meeting Notetaker\n\nScopes: Calendars.Read, Mail.Read\nAction: Verify business approval or revoke OAuth consent in Entra ID -> Enterprise Applications."
-        },
-        {
-          app: "PDF-AI-Summarizer Pro (Unverified Publisher)",
-          user: "User / Admin OAuth Consent",
-          scopes: "Files.ReadWrite.All",
-          risk: "HIGH",
-          ticket: "Subject: Shadow IT Review — PDF-AI-Summarizer Pro\n\nScopes: Files.ReadWrite.All\nAction: Verify business approval or revoke SharePoint/OneDrive write consent immediately."
-        }
-      ]
-    };
+    const SAMPLE_LICENSES = [
+      { name: "Marcus Vance", upn: "mvance@acmelogistics.com", sku: "Microsoft 365 E5", reason: "Account Disabled · Active Paid Seat", monthly: 57 },
+      { name: "Elena Rostova", upn: "erostova@acmelogistics.com", sku: "Microsoft 365 E3", reason: "Inactive 94 Days", monthly: 36 },
+      { name: "Devon Brooks", upn: "dbrooks@acmelogistics.com", sku: "Microsoft 365 Business Premium", reason: "Inactive 78 Days", monthly: 22 },
+      { name: "Claire Bennett", upn: "cbennett@acmelogistics.com", sku: "Power BI Pro + Visio Plan 2", reason: "Account Disabled", monthly: 25 },
+      { name: "Jordan Lee", upn: "jlee@acmelogistics.com", sku: "Microsoft 365 E3", reason: "Inactive 112 Days", monthly: 36 }
+    ];
 
-    function updateRoiCalculator() {
-      const emp = parseInt(document.getElementById("calcEmp").value, 10) || 250;
-      const prem = parseInt(document.getElementById("calcPrem").value, 10) || 60;
-      const months = parseInt(document.getElementById("calcMonths").value, 10) || 6;
+    const SAMPLE_SHADOW = [
+      { name: "Otter.ai Meeting Notes", appId: "8f21a9c0-41b2-4e9d-901a-112233445566", note: "User-consented · Calendar & Mail read scopes", status: "Review" },
+      { name: "Unapproved PDF Cloud Converter", appId: "3d90e411-77c1-48a2-b551-998877665544", note: "Broad OneDrive file read/write scope", status: "Flagged" },
+      { name: "Personal Trello Connector", appId: "1a44b890-22d9-4f11-8c33-556677889900", note: "Low activity · Duplicate project tool", status: "Review" }
+    ];
 
-      document.getElementById("calcEmpVal").textContent = `${emp.toLocaleString()} users`;
-      document.getElementById("calcPremVal").textContent = `${prem.toLocaleString()} seats`;
-      document.getElementById("calcMonthsVal").textContent = `${months} month${months === 1 ? "" : "s"}`;
-
-      const driftFactor = Math.min(1.6, 0.7 + months * 0.06);
-      const baseSeatsWaste = Math.round(emp * 0.07 * driftFactor) * 36 * 12;
-      const premSeatsWaste = Math.round(prem * 0.12 * driftFactor) * 57 * 12;
-      const totalAnnual = baseSeatsWaste + premSeatsWaste;
-
-      const planCost = emp <= 250 ? 79 : emp <= 1500 ? 199 : 499;
-      const planName = emp <= 250 ? "Starter ($79/mo)" : emp <= 1500 ? "Growth ($199/mo)" : "MSP / CFO ($499/mo)";
-      const roiMultiple = Math.max(1, Math.round(totalAnnual / (planCost * 12)));
-
-      document.getElementById("calcTotal").textContent = `$${totalAnnual.toLocaleString()}/yr`;
-      document.getElementById("calcRoiNote").textContent = `~${roiMultiple}x estimated return vs. ZeroWaste IT ${planName}`;
-      window._lastCalcEstimate = { emp, prem, months, totalAnnual, planName };
-    }
-
-    function copyCfoApprovalEmail() {
-      const est = window._lastCalcEstimate || { emp: 250, prem: 60, months: 6, totalAnnual: 18480, planName: "Starter ($79/mo)" };
-      const body = `Subject: Quick SaaS & M365 License Audit — Est. $${est.totalAnnual.toLocaleString()}/yr Recoverable
-
-Hi,
-
-Based on our current headcount (${est.emp} users, ${est.prem} premium M365/Copilot seats) and ${est.months} months since our last full license audit, we likely have ~$${est.totalAnnual.toLocaleString()}/yr tied up in dormant seats and overlapping SaaS subscriptions.
-
-I'd like to run a read-only Microsoft Entra ID & corporate card audit using ZeroWaste IT (${est.planName}). It connects strictly read-only via Microsoft Graph (no credentials stored), pinpoints unused licenses by employee UPN, flags risky OAuth app grants, and generates -WhatIf PowerShell reclamation scripts.
-
-Reclaiming just 2 unused E5 seats ($114/mo) or 3 Copilot seats ($90/mo) covers the subscription in month one.
-
-Security & demo overview: https://zerowaste.profitharborai.com`;
-
-      navigator.clipboard.writeText(body);
-      alert("CFO / Manager approval email copied to clipboard!");
-    }
-
-    function copyEntraSetupScript() {
-      const script = `# Run in Azure Cloud Shell or PowerShell with Azure CLI (az login)
-# Creates a 100% READ-ONLY Entra ID App Registration for ZeroWaste IT
-$AppName = "ZeroWaste-IT-ReadOnly-Auditor"
-$TenantId = (az account show --query tenantId -o tsv)
-$AppId = (az ad app create --display-name $AppName --query appId -o tsv)
-az ad sp create --id $AppId | Out-Null
-
-# Add Read-Only Microsoft Graph Permissions (User.Read.All, AuditLog.Read.All, Application.Read.All)
-az ad app permission add --id $AppId --api 00000003-0000-0000-c000-000000000000 --api-permissions df021288-bdef-4463-88db-98f22de89214=Role b0afded3-3588-46d8-8b3d-9842eff778da=Role 9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30=Role
-az ad app permission admin-consent --id $AppId
-
-$Secret = (az ad app credential reset --id $AppId --append --years 1 --query password -o tsv)
-Write-Host ""
-Write-Host "=== Paste These Into ZeroWaste IT ===" -ForegroundColor Green
-Write-Host "Tenant ID:     $TenantId"
-Write-Host "Client ID:     $AppId"
-Write-Host "Client Secret: $Secret" -ForegroundColor Yellow`;
-
-      navigator.clipboard.writeText(script);
-      alert("10-Second Azure CLI Read-Only Setup Script copied to clipboard!");
-    }
-
-    function loadSampleCardCsv() {
-      const sampleFindings = [
-        {
-          vendor: "ZOOM.US (3 Card Lines — Review)",
-          classification: "Suspected Overlap",
-          signal: "3 separate recurring card charges — verify if separate dept plans or duplicate",
-          seats: "3 line(s)",
-          annual: 2160,
-          users: [],
-          ticket: "Subject: SaaS Spend Review — ZOOM.US ($2,160/yr across 3 card lines)\n\nDetected 3 separate recurring corporate card charges totaling $180.00/mo. Verify with department owners whether these can be consolidated."
-        },
-        {
-          vendor: "ADOBE CREATIVE CLOUD (2 Card Lines — Review)",
-          classification: "Suspected Overlap",
-          signal: "2 separate recurring card charges — verify if separate team accounts",
-          seats: "2 line(s)",
-          annual: 1440,
-          users: [],
-          ticket: "Subject: SaaS Spend Review — ADOBE CREATIVE CLOUD ($1,440/yr across 2 card lines)\n\nDetected 2 separate recurring corporate card charges totaling $120.00/mo. Confirm whether seats can be consolidated."
-        },
-        {
-          vendor: "OPENAI *CHATGPT TEAM (Verify Approval)",
-          classification: "Unverified Card Spend",
-          signal: "Recurring $150/mo card charge — confirm IT/security approval",
-          seats: "1 line(s)",
-          annual: 1800,
-          users: [],
-          ticket: "Subject: SaaS Governance Review — OPENAI *CHATGPT TEAM ($1,800/yr)\n\nDetected recurring $150.00/mo corporate card charge. Confirm whether this workspace is approved under company AI policy."
-        }
-      ];
-      state.spend = [...sampleFindings, ...state.spend];
-      state.modeLabel = state.isDemo ? "Simulated Demo + Sample Card CSV" : "Live Tenant + Card CSV";
-      render();
-    }
-
-    function updateWorkspaceName(val) {
-      const trimmed = (val || "").trim();
-      if (trimmed) state.workspaceName = trimmed;
-    }
-
-    function guessSkuPartNumber(vendorName, explicitSku) {
-      if (explicitSku) return explicitSku;
-      const v = (vendorName || "").toLowerCase();
-      if (v.includes("copilot")) return "Microsoft_365_Copilot";
-      if (v.includes("e5")) return "SPE_E5";
-      if (v.includes("e3")) return "SPE_E3";
-      if (v.includes("business premium")) return "SPB";
-      if (v.includes("business standard")) return "O365_BUSINESS_PREMIUM";
-      if (v.includes("f3")) return "SPE_F1";
-      if (v.includes("visio")) return "VISIOCLIENT";
-      if (v.includes("project")) return "PROJECTPREMIUM";
-      return "ENTERPRISEPACK";
-    }
-
-    function openPowerShellModal(idx) {
-      activePsIdx = idx;
-      document.getElementById("psModalTitle").textContent = idx === -1
-        ? "Bulk Microsoft Graph PowerShell Reclamation Script (All SKUs)"
-        : `PowerShell Reclamation Script — ${state.spend[idx]?.vendor || "License"}`;
-      refreshPowerShellCode();
-      document.getElementById("psModal").classList.add("open");
-    }
-
-    function refreshPowerShellCode() {
-      const whatIf = document.getElementById("psWhatIfCheck").checked;
-      const disabledOnly = document.getElementById("psDisabledOnlyCheck").checked;
-      const items = activePsIdx === -1 ? state.spend : [state.spend[activePsIdx]].filter(Boolean);
-
-      const blocks = items.map(item => {
-        const users = (item.users || []).filter(u => !disabledOnly || (u.status || "").includes("Disabled"));
-        if (users.length === 0) return `# No matching users for ${item.vendor} under current filter.`;
-        const skuPart = guessSkuPartNumber(item.vendor, item.skuPartNumber);
-        const upnLines = users.map(u => `    "${u.upn}" # ${u.name} (${u.status})`).join(",\n");
-        return `# --- Reclaim ${users.length} seat(s) of ${item.vendor} ---
-# NOTE: Verify Exchange Litigation Hold / Inactive Mailbox retention before removing E3/E5 licenses.
-$Sku_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = (Get-MgSubscribedSku -All | Where-Object SkuPartNumber -eq "${skuPart}").SkuId
-$Targets_${skuPart.replace(/[^A-Za-z0-9]/g, "_")} = @(
-${upnLines}
-)
-foreach ($Upn in $Targets_${skuPart.replace(/[^A-Za-z0-9]/g, "_")}) {
-    Write-Host "Revoking ${item.vendor} from $Upn..." -ForegroundColor Yellow
-    Set-MgUserLicense -UserId $Upn -AddLicenses @{} -RemoveLicenses @($Sku_${skuPart.replace(/[^A-Za-z0-9]/g, "_")})${whatIf ? " -WhatIf" : ""}
-}`;
-      }).join("\n\n");
-
-      const header = `# Generated by ZeroWaste IT (${new Date().toLocaleDateString()})
-# Mode: ${whatIf ? "DRY-RUN (-WhatIf active — no licenses will be modified)" : "LIVE EXECUTION"}
-Install-Module Microsoft.Graph.Users.Actions -Scope CurrentUser -ErrorAction SilentlyContinue
-Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
-
-`;
-      document.getElementById("psContent").textContent = header + (blocks || "# No user-level M365 license findings loaded.");
-    }
-
-    function copyPowerShellText() {
-      const text = document.getElementById("psContent").textContent;
-      navigator.clipboard.writeText(text);
-      alert("PowerShell reclamation script copied to clipboard!");
-    }
-
-    function computeSimulatedTotals() {
-      const mode = document.getElementById("simActionMode")?.value || "revoke";
-      const pct = (parseInt(document.getElementById("simPctSlider")?.value, 10) || 100) / 100;
-      document.getElementById("simPctLabel").textContent = Math.round(pct * 100) + "%";
-
-      let rawLicenseAnnual = 0;
-      let cardReviewAnnual = 0;
-      let cardLineCount = 0;
-      let disabledCount = 0;
-      let inactiveActiveCount = 0;
-
-      state.spend.forEach(item => {
-        const users = Array.isArray(item.users) ? item.users : [];
-        if (users.length > 0) {
-          const dUsers = users.filter(u => (u.status || "").includes("Disabled")).length;
-          const aUsers = Math.max(0, users.length - dUsers);
-          disabledCount += dUsers;
-          inactiveActiveCount += aUsers;
-
-          let itemAnnual = Number(item.annual) || 0;
-          if (mode === "downgrade" && (item.vendor || "").toLowerCase().includes("e5")) {
-            itemAnnual = users.length * 21 * 12;
-          } else if (mode === "disabled_only") {
-            itemAnnual = (itemAnnual / users.length) * dUsers;
-          }
-          rawLicenseAnnual += itemAnnual;
-        } else {
-          cardReviewAnnual += Number(item.annual) || 0;
-          cardLineCount += 1;
-        }
-      });
-
-      return {
-        licenseAnnual: Math.round(rawLicenseAnnual * pct),
-        licenseMonthly: Math.round((rawLicenseAnnual * pct) / 12),
-        cardReviewAnnual: Math.round(cardReviewAnnual),
-        cardLineCount,
-        disabledCount,
-        inactiveActiveCount
-      };
-    }
-
-    function exportExecutivePdf() {
-      const sim = computeSimulatedTotals();
-      const win = window.open("", "_blank");
-      if (!win) {
-        alert("Please allow pop-ups to generate the Executive PDF report.");
-        return;
-      }
-
-      const spendRows = state.spend.map(s => {
-        const safeCount = (s.users || []).filter(u => (u.status || "").includes("Disabled")).length;
-        const reviewCount = Math.max(0, (s.users || []).length - safeCount);
-        const triageText = (s.users || []).length > 0
-          ? `${safeCount} Disabled (Check Hold), ${reviewCount} Manager Review`
-          : (s.classification || "Card Spend — Needs Verification");
-        const amtColor = (s.users || []).length > 0 ? "#059669" : "#d97706";
-        return `
-          <tr>
-            <td><strong>${escapeHtml(s.vendor)}</strong></td>
-            <td>${escapeHtml(s.signal)}</td>
-            <td>${escapeHtml(triageText)}</td>
-            <td style="text-align:right;font-weight:700;color:${amtColor};">$${Number(s.annual).toLocaleString()}/yr</td>
-          </tr>
-        `;
-      }).join("");
-
-      const shadowRows = state.shadow.map(sh => `
-        <tr>
-          <td><strong>${escapeHtml(sh.app)}</strong></td>
-          <td><code>${escapeHtml(sh.scopes)}</code></td>
-          <td><span style="color:#dc2626;font-weight:700;">${escapeHtml(sh.risk)}</span></td>
-        </tr>
-      `).join("");
-
-      const docHtml = [
-        "<!DOCTYPE html><html><head>",
-        "<title>ZeroWaste IT — Executive SaaS & Security Audit Report</title>",
-        "<style>",
-        "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #0f172a; padding: 36px; max-width: 900px; margin: 0 auto; }",
-        ".header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #10b981; padding-bottom: 16px; margin-bottom: 24px; }",
-        ".logo { font-size: 22px; font-weight: 800; color: #0b0f17; }",
-        ".logo span { color: #10b981; }",
-        ".meta { text-align: right; font-size: 12px; color: #475569; }",
-        ".kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }",
-        ".kpi { border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; }",
-        ".kpi-title { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; }",
-        ".kpi-num { font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px; }",
-        "h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; margin: 22px 0 10px; }",
-        "table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }",
-        "th { background: #f1f5f9; text-align: left; padding: 9px 10px; border-bottom: 1px solid #cbd5e1; font-size: 11px; text-transform: uppercase; }",
-        "td { padding: 9px 10px; border-bottom: 1px solid #e2e8f0; }",
-        ".footer { margin-top: 32px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 12px; }",
-        "</style></head><body>",
-        `<div class="header"><div class="logo">ZeroWaste <span>IT</span> — Executive Audit Brief</div>`,
-        `<div class="meta"><strong>${escapeHtml(state.workspaceName)}</strong><br/>Generated ${new Date().toLocaleDateString()} &bull; Users Audited: ${state.totalUsers}</div></div>`,
-        `<div class="kpis">`,
-        `<div class="kpi"><div class="kpi-title">Potential License Savings</div><div class="kpi-num" style="color:#059669;">$${sim.licenseAnnual.toLocaleString()}/yr</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Card Spend Under Review</div><div class="kpi-num" style="color:#d97706;">$${sim.cardReviewAnnual.toLocaleString()}/yr</div></div>`,
-        `<div class="kpi"><div class="kpi-title">Disabled / Inactive Seats</div><div class="kpi-num">${sim.disabledCount} / ${sim.inactiveActiveCount}</div></div>`,
-        `<div class="kpi"><div class="kpi-title">OAuth App Grants</div><div class="kpi-num" style="color:#dc2626;">${state.shadow.length}</div></div>`,
-        `</div>`,
-        `<h2>1. License Savings &amp; Card Spend Requiring Review</h2>`,
-        `<table><thead><tr><th>Vendor / SKU</th><th>Detection Signal</th><th>Classification / Triage</th><th style="text-align:right;">Annual Amount</th></tr></thead>`,
-        `<tbody>${spendRows || '<tr><td colspan="4">No license waste findings.</td></tr>'}</tbody></table>`,
-        `<h2>2. Third-Party OAuth Application Permissions</h2>`,
-        `<table><thead><tr><th>Connected Application</th><th>Granted Graph Scopes</th><th>Risk Level</th></tr></thead>`,
-        `<tbody>${shadowRows || '<tr><td colspan="3">No high-risk OAuth grants detected.</td></tr>'}</tbody></table>`,
-        `<div class="footer">Prepared via ZeroWaste IT (zerowaste.profitharborai.com) &bull; Read-Only Microsoft Graph Audit</div>`,
-        `<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="window.print()" style="display:none;" />`,
-        `</body></html>`
-      ].join("");
-
-      win.document.write(docHtml);
-      win.document.close();
-    }
-
-    function checkoutPlan(planKey) {
-      const baseUrl = STRIPE_LINKS[planKey];
-      if (!baseUrl) return;
-      const targetUrl = currentUser?.email
-        ? `${baseUrl}?prefilled_email=${encodeURIComponent(currentUser.email)}`
-        : baseUrl;
-      window.open(targetUrl, "_blank", "noopener");
-    }
-
-    function checkUpgradeRedirect() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("upgraded") === "true") {
-        document.getElementById("upgradeBanner").classList.add("open");
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
-
-    function dismissUpgradeBanner() {
-      document.getElementById("upgradeBanner").classList.remove("open");
-    }
-
-    async function initAuth() {
-      const { data } = await sb.auth.getSession();
-      updateAuthUI(data?.session?.user || null);
-      sb.auth.onAuthStateChange((_event, session) => {
-        updateAuthUI(session?.user || null);
-      });
-    }
-
-    function updateAuthUI(user) {
-      currentUser = user;
-      const chip = document.getElementById("userEmailChip");
-      const btnAuth = document.getElementById("btnAuthNav");
-      const btnSignOut = document.getElementById("btnSignOut");
-      const btnHistory = document.getElementById("btnHistory");
-
-      if (user) {
-        chip.textContent = user.email;
-        chip.style.display = "inline-block";
-        btnAuth.style.display = "none";
-        btnSignOut.style.display = "inline-flex";
-        btnHistory.style.display = "inline-flex";
-      } else {
-        chip.style.display = "none";
-        btnAuth.style.display = "inline-flex";
-        btnSignOut.style.display = "none";
-        btnHistory.style.display = "none";
-      }
-    }
-
-    function openAuthModal() {
-      document.getElementById("authError").style.display = "none";
-      document.getElementById("authSuccess").style.display = "none";
-      document.getElementById("authModal").classList.add("open");
-    }
-
-    function closeAuthModal() {
-      document.getElementById("authModal").classList.remove("open");
-    }
-
-    async function handleSignUp() {
-      const email = document.getElementById("authEmail").value.trim();
-      const password = document.getElementById("authPassword").value;
-      const errEl = document.getElementById("authError");
-      const okEl = document.getElementById("authSuccess");
-      errEl.style.display = "none";
-      okEl.style.display = "none";
-
-      const { data, error } = await sb.auth.signUp({ email, password });
-      if (error) {
-        errEl.textContent = error.message;
-        errEl.style.display = "block";
-        return;
-      }
-      if (data?.session) {
-        closeAuthModal();
-      } else {
-        okEl.textContent = "Account created! Check your email for a confirmation link, or sign in.";
-        okEl.style.display = "block";
-      }
-    }
-
-    async function handleSignIn() {
-      const email = document.getElementById("authEmail").value.trim();
-      const password = document.getElementById("authPassword").value;
-      const errEl = document.getElementById("authError");
-      errEl.style.display = "none";
-
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) {
-        errEl.textContent = error.message;
-        errEl.style.display = "block";
-        return;
-      }
-      closeAuthModal();
-    }
-
-    async function signOutUser() {
-      await sb.auth.signOut();
-    }
-
-    async function saveCurrentScan() {
-      if (!currentUser) {
-        openAuthModal();
-        return;
-      }
-      const btn = document.getElementById("btnSaveScan");
-      btn.disabled = true;
-      btn.textContent = "Saving...";
-
-      const sim = computeSimulatedTotals();
-      const totalReclaimable = state.spend.reduce((acc, item) => acc + (item.users ? item.users.length : 1), 0);
-
-      const { error } = await sb.from("audit_scans").insert({
-        user_id: currentUser.id,
-        workspace_name: state.workspaceName,
-        scan_mode: state.modeLabel,
-        total_users: state.totalUsers,
-        annual_savings: sim.licenseAnnual,
-        reclaimable_seats: totalReclaimable,
-        shadow_risks: state.shadow.length,
-        spend_findings: state.spend,
-        shadow_findings: state.shadow
-      });
-
-      btn.disabled = false;
-      btn.textContent = "Save Audit";
-
-      if (error) {
-        alert("Could not save scan: " + error.message);
-      } else {
-        alert("Audit saved to your workspace!");
-      }
-    }
-
-    async function openHistoryModal() {
-      if (!currentUser) {
-        openAuthModal();
-        return;
-      }
-      const modal = document.getElementById("historyModal");
-      const listEl = document.getElementById("historyList");
-      listEl.innerHTML = "<p style='color:var(--muted);'>Loading saved audits...</p>";
-      modal.classList.add("open");
-
-      const { data, error } = await sb
-        .from("audit_scans")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        listEl.innerHTML = `<p style="color:#fca5a5;">Error: ${escapeHtml(error.message)}</p>`;
-        return;
-      }
-      if (!data || data.length === 0) {
-        listEl.innerHTML = `<p style="color:var(--muted);">No saved audits yet. Run a scan and click "Save Audit".</p>`;
-        return;
-      }
-
-      window._savedScans = data;
-      listEl.innerHTML = data.map((row, idx) => `
-        <div class="history-item">
-          <div class="history-meta">
-            <strong>${escapeHtml(row.workspace_name)} — $${Number(row.annual_savings).toLocaleString()}/yr license savings</strong>
-            <span>${new Date(row.created_at).toLocaleString()} &bull; ${row.reclaimable_seats} seats/lines &bull; ${row.shadow_risks} OAuth grants</span>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn btn-primary btn-sm" onclick="loadSavedScan(${idx})">Load</button>
-            <button class="btn btn-danger-outline btn-sm" onclick="deleteSavedScan('${row.id}')">Delete</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function loadSavedScan(idx) {
-      const row = window._savedScans[idx];
-      if (!row) return;
-      state.spend = row.spend_findings || [];
-      state.shadow = row.shadow_findings || [];
-      state.totalUsers = row.total_users || 0;
-      state.isDemo = false;
-      state.workspaceName = row.workspace_name;
-      state.modeLabel = "Saved Audit (" + new Date(row.created_at).toLocaleDateString() + ")";
-      state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
+    function loadSampleData() {
+      state.isDemo = true;
+      state.workspaceName = "Sample Tenant — Acme Logistics Group (240 Seats)";
+      state.modeLabel = "Simulated Demo Data";
+      state.totalUsers = 240;
+      state.licenses = JSON.parse(JSON.stringify(SAMPLE_LICENSES));
+      state.shadowApps = JSON.parse(JSON.stringify(SAMPLE_SHADOW));
       document.getElementById("workspaceInput").value = state.workspaceName;
-      document.getElementById("historyModal").classList.remove("open");
       render();
     }
 
-    async function deleteSavedScan(id) {
-      await sb.from("audit_scans").delete().eq("id", id);
-      openHistoryModal();
+    async function runLiveScan() {
+      const tenant_id = document.getElementById("inTenantId").value.trim();
+      const client_id = document.getElementById("inClientId").value.trim();
+      const client_secret = document.getElementById("inClientSecret").value.trim();
+      const errEl = document.getElementById("scanError");
+      const btn = document.getElementById("btnRunScan");
+
+      if (!tenant_id || !client_id || !client_secret) {
+        errEl.textContent = "Please enter Directory ID, Application ID, and Client Secret.";
+        errEl.style.display = "block";
+        return;
+      }
+      errEl.style.display = "none";
+      btn.disabled = true;
+      btn.textContent = "Scanning Tenant...";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/scan`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tenant_id, client_id, client_secret, inactive_days: 60 })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Spend audit failed.");
+
+        state.isDemo = false;
+        state.totalUsers = data.total_users || 0;
+        state.licenses = (data.unused_licenses || data.wasted_licenses || []).map(item => ({
+          name: item.display_name || item.name || "User",
+          upn: item.user_principal_name || item.upn || "",
+          sku: item.sku_name || item.sku || "M365 License",
+          reason: item.reason || "Inactive / Disabled",
+          monthly: Number(item.monthly_cost || item.estimated_monthly_savings || 22)
+        }));
+        state.shadowApps = (data.shadow_apps || data.oauth_apps || []).map(app => ({
+          name: app.display_name || app.name || "Connected App",
+          appId: app.app_id || app.id || "",
+          note: app.note || app.permissions || "OAuth Service Principal",
+          status: "Review"
+        }));
+        state.workspaceName = `Live Audit — ${tenant_id.slice(0, 8)}...`;
+        state.modeLabel = `Live Scan (${new Date().toLocaleTimeString()})`;
+        document.getElementById("workspaceInput").value = state.workspaceName;
+        document.getElementById("connectModal").classList.remove("open");
+        render();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Run Spend Audit";
+      }
     }
 
     function render() {
-      const sim = computeSimulatedTotals();
-
       document.getElementById("demoBanner").style.display = state.isDemo ? "flex" : "none";
-      const dot = document.getElementById("statusDot");
-      if (state.isDemo) {
-        dot.classList.remove("live");
-      } else {
-        dot.classList.add("live");
-      }
+      document.getElementById("statusDot").classList.toggle("live", !state.isDemo);
 
-      document.getElementById("kpiSavings").textContent = "$" + sim.licenseAnnual.toLocaleString();
-      document.getElementById("kpiMonthly").textContent = "$" + sim.licenseMonthly.toLocaleString() + " / month from dormant seats";
-      document.getElementById("kpiCardReview").textContent = "$" + sim.cardReviewAnnual.toLocaleString();
-      document.getElementById("kpiCardReviewSub").textContent = sim.cardLineCount > 0
-        ? `${sim.cardLineCount} flagged vendor group(s) to verify`
-        : "Upload Card CSV to check overlaps";
-      document.getElementById("kpiTriage").textContent = `${sim.disabledCount} Disabled / ${sim.inactiveActiveCount} Inactive`;
-      document.getElementById("kpiShadow").textContent = state.shadow.length;
-      document.getElementById("scanModeSub").textContent = `${state.totalUsers} users · ${state.modeLabel}`;
+      const monthly = state.licenses.reduce((s, l) => s + (l.monthly || 0), 0);
+      const annual = monthly * 12;
 
-      document.getElementById("countSpend").textContent = state.spend.length;
-      document.getElementById("countShadow").textContent = state.shadow.length;
+      document.getElementById("kpiAnnual").textContent = `$${annual.toLocaleString()}`;
+      document.getElementById("kpiMonthly").textContent = `$${monthly.toLocaleString()} / month recoverable`;
+      document.getElementById("kpiWasteSeats").textContent = state.licenses.length;
+      document.getElementById("kpiShadowApps").textContent = state.shadowApps.length;
+      document.getElementById("kpiUsers").textContent = state.totalUsers;
+      document.getElementById("scanModeSub").textContent = state.modeLabel;
+      document.getElementById("countLicenses").textContent = state.licenses.length;
+      document.getElementById("countShadow").textContent = state.shadowApps.length;
 
-      const tbodySpend = document.getElementById("tbodySpend");
-      if (state.spend.length === 0) {
-        tbodySpend.innerHTML = `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused licenses or spend anomalies found.</td></tr>`;
-      } else {
-        tbodySpend.innerHTML = state.spend.map((item, idx) => {
-          const hasUsers = Array.isArray(item.users) && item.users.length > 0;
-          const isOpen = !!state.expandedRows[idx];
-          const viewBtn = hasUsers
-            ? `<button class="btn btn-outline btn-sm" onclick="toggleUserDrawer(${idx})">${isOpen ? "Hide" : "View"} Users (${item.users.length})</button>`
-            : "";
-          const psBtn = hasUsers
-            ? `<button class="btn btn-blue btn-sm" onclick="openPowerShellModal(${idx})">PowerShell</button>`
-            : "";
+      document.getElementById("tbodyLicenses").innerHTML = state.licenses.length === 0
+        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused or disabled paid licenses flagged.</td></tr>`
+        : state.licenses.map(l => `
+          <tr>
+            <td><strong>${escapeHtml(l.name)}</strong></td>
+            <td><code>${escapeHtml(l.upn)}</code></td>
+            <td>${escapeHtml(l.sku)}</td>
+            <td><span class="badge badge-waste">${escapeHtml(l.reason)}</span></td>
+            <td style="font-weight:700;color:var(--accent);">$${l.monthly}/mo</td>
+          </tr>
+        `).join("");
 
-          const classBadge = hasUsers
-            ? `<span class="badge badge-safe">Dormant License</span>`
-            : `<span class="badge badge-med">${escapeHtml(item.classification || "Needs Verification")}</span>`;
-          const amountClass = hasUsers ? "val-green" : "val-amber";
-
-          let drawerHtml = "";
-          if (hasUsers && isOpen) {
-            const userRows = item.users.map(u => {
-              const isDisabled = (u.status || "").includes("Disabled");
-              const triageBadge = isDisabled
-                ? `<span class="badge badge-safe">Disabled — Check Hold/Retention</span>`
-                : `<span class="badge badge-med">Verify (${escapeHtml(u.status)})</span>`;
-              return `
-                <tr>
-                  <td><strong>${escapeHtml(u.name)}</strong></td>
-                  <td><code>${escapeHtml(u.upn)}</code></td>
-                  <td style="color:var(--muted);">${escapeHtml(u.department)}</td>
-                  <td>${triageBadge}</td>
-                  <td style="color:var(--muted);">${escapeHtml(u.last_signin)}</td>
-                </tr>
-              `;
-            }).join("");
-
-            drawerHtml = `
-              <tr class="user-drawer-row">
-                <td colspan="5">
-                  <div class="user-drawer-header">
-                    <span>Assigned Users Holding Unused ${escapeHtml(item.vendor)} Licenses</span>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                      <button class="btn btn-blue btn-sm" onclick="openPowerShellModal(${idx})">Generate PowerShell Script</button>
-                      <button class="btn btn-outline btn-sm" onclick="copyUpnList(${idx})">Copy UPN / Email List</button>
-                    </div>
-                  </div>
-                  <table class="sub-table">
-                    <thead>
-                      <tr>
-                        <th>Display Name</th>
-                        <th>Email / UPN</th>
-                        <th>Department</th>
-                        <th>Reclamation Triage</th>
-                        <th>Last Sign-In</th>
-                      </tr>
-                    </thead>
-                    <tbody>${userRows}</tbody>
-                  </table>
-                </td>
-              </tr>
-            `;
-          }
-
-          return `
-            <tr>
-              <td><strong>${escapeHtml(item.vendor)}</strong></td>
-              <td style="color:var(--muted);">${classBadge} <span style="margin-left:6px;">${escapeHtml(item.signal)}</span></td>
-              <td>${escapeHtml(item.seats)}</td>
-              <td class="${amountClass}"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
-              <td>
-                <div class="action-cell">
-                  ${viewBtn}
-                  ${psBtn}
-                  <button class="btn btn-outline btn-sm" onclick="openTicket('spend', ${idx})">Ticket</button>
-                </div>
-              </td>
-            </tr>
-            ${drawerHtml}
-          `;
-        }).join("");
-      }
-
-      const tbodyShadow = document.getElementById("tbodyShadow");
-      tbodyShadow.innerHTML = state.shadow.length === 0
-        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No risky third-party OAuth grants detected.</td></tr>`
-        : state.shadow.map((item, idx) => {
-          const badgeClass = item.risk === "HIGH" ? "badge-high" : item.risk === "MEDIUM" ? "badge-med" : "badge-low";
-          return `
-            <tr>
-              <td><strong>${escapeHtml(item.app)}</strong></td>
-              <td style="color:var(--muted);">${escapeHtml(item.user)}</td>
-              <td><code>${escapeHtml(item.scopes)}</code></td>
-              <td><span class="badge ${badgeClass}">${escapeHtml(item.risk)}</span></td>
-              <td><button class="btn btn-outline btn-sm" onclick="openTicket('shadow', ${idx})">Review Ticket</button></td>
-            </tr>
-          `;
-        }).join("");
-    }
-
-    function toggleUserDrawer(idx) {
-      state.expandedRows[idx] = !state.expandedRows[idx];
-      render();
-    }
-
-    function copyUpnList(idx) {
-      const users = state.spend[idx]?.users || [];
-      const upns = users.map(u => u.upn).filter(Boolean).join("\n");
-      navigator.clipboard.writeText(upns);
-      alert(`Copied ${users.length} email/UPN address(es) to clipboard!`);
-    }
-
-    function loadSampleData() {
-      const copy = JSON.parse(JSON.stringify(SAMPLE_DATA));
-      state.spend = copy.spend;
-      state.shadow = copy.shadow;
-      state.totalUsers = copy.totalUsers;
-      state.isDemo = true;
-      state.workspaceName = copy.workspaceName;
-      state.modeLabel = copy.modeLabel;
-      state.expandedRows = { 0: true };
-      document.getElementById("workspaceInput").value = state.workspaceName;
-      render();
+      document.getElementById("tbodyShadow").innerHTML = state.shadowApps.length === 0
+        ? `<tr><td colspan="4" style="color:var(--muted);text-align:center;">No third-party Shadow IT apps flagged.</td></tr>`
+        : state.shadowApps.map(a => `
+          <tr>
+            <td><strong>${escapeHtml(a.name)}</strong></td>
+            <td><code>${escapeHtml(a.appId)}</code></td>
+            <td style="color:var(--muted);">${escapeHtml(a.note)}</td>
+            <td><span class="badge badge-shadow">${escapeHtml(a.status)}</span></td>
+          </tr>
+        `).join("");
     }
 
     function switchTab(tab) {
-      document.getElementById("tabSpend").classList.toggle("active", tab === "spend");
+      document.getElementById("tabLicenses").classList.toggle("active", tab === "licenses");
       document.getElementById("tabShadow").classList.toggle("active", tab === "shadow");
-      document.getElementById("panelSpend").style.display = tab === "spend" ? "block" : "none";
+      document.getElementById("panelLicenses").style.display = tab === "licenses" ? "block" : "none";
       document.getElementById("panelShadow").style.display = tab === "shadow" ? "block" : "none";
     }
 
@@ -1375,141 +547,48 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       document.getElementById("connectModal").classList.add("open");
     }
 
-    function closeConnectModal() {
-      document.getElementById("connectModal").classList.remove("open");
+    function openScriptModal() {
+      const upns = state.licenses.map(l => `"${l.upn}"`).join(", ");
+      const script = `# ZeroWaste IT — Dry-Run License Inspection & Reclamation (-WhatIf)
+Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
+$Users = @(${upns || '"user@yourdomain.com"'})
+foreach ($Upn in $Users) {
+    $User = Get-MgUser -UserId $Upn -Property DisplayName,AccountEnabled,AssignedLicenses
+    Write-Host "Reviewing $($User.DisplayName) ($Upn) | Enabled: $($User.AccountEnabled) | Licenses: $($User.AssignedLicenses.Count)" -ForegroundColor Cyan
+    # Set-MgUserLicense -UserId $User.Id -AddLicenses @() -RemoveLicenses @("<SkuId>") -WhatIf
+}`;
+      document.getElementById("scriptBox").textContent = script;
+      document.getElementById("scriptModal").classList.add("open");
     }
 
-    async function runLiveEntraScan() {
-      const tenant_id = document.getElementById("inTenantId").value.trim();
-      const client_id = document.getElementById("inClientId").value.trim();
-      const client_secret = document.getElementById("inClientSecret").value.trim();
-      const inactive_days = parseInt(document.getElementById("inInactiveDays").value, 10) || 45;
-      const errEl = document.getElementById("scanError");
-      const btn = document.getElementById("btnRunScan");
-
-      if (!tenant_id || !client_id || !client_secret) {
-        errEl.textContent = "Please enter Tenant ID, Client ID, and Client Secret.";
-        errEl.style.display = "block";
-        return;
-      }
-
-      errEl.style.display = "none";
-      btn.disabled = true;
-      btn.textContent = "Scanning Graph API (may take ~20s if waking server)...";
-
-      try {
-        const res = await fetch(`${API_BASE}/api/scan/entra`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tenant_id, client_id, client_secret, inactive_days })
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.detail || "Entra ID scan failed.");
-        }
-
-        state.spend = data.spend || [];
-        state.shadow = data.shadow || [];
-        state.totalUsers = data.total_users || 0;
-        state.isDemo = false;
-        state.expandedRows = state.spend.length > 0 ? { 0: true } : {};
-        state.workspaceName = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
-        state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
-
-        document.getElementById("workspaceInput").value = state.workspaceName;
-        closeConnectModal();
-        render();
-      } catch (err) {
-        errEl.textContent = err.message;
-        errEl.style.display = "block";
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Run Live Audit";
-      }
+    function copyScriptBox() {
+      navigator.clipboard.writeText(document.getElementById("scriptBox").textContent);
+      alert("PowerShell script copied!");
     }
 
-    function handleCsvUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const lines = evt.target.result.split(/\r?\n/).slice(1);
-        const map = {};
-        lines.forEach(line => {
-          const cols = line.split(",");
-          if (cols.length < 3) return;
-          const vendor = cols[1].replace(/["*]/g, "").trim().split(" ")[0].toUpperCase();
-          const amt = parseFloat(cols[2].replace(/[$,]/g, ""));
-          if (vendor && !isNaN(amt) && amt > 0) {
-            if (!map[vendor]) map[vendor] = { count: 0, monthly: 0 };
-            map[vendor].count += 1;
-            map[vendor].monthly += amt;
-          }
-        });
-        const csvFindings = Object.entries(map).map(([vendor, d]) => {
-          const annual = Math.round(d.monthly * 12);
-          return {
-            vendor: d.count > 1 ? `${vendor} (${d.count} Card Lines — Review)` : `${vendor} (Verify Approval)`,
-            classification: d.count > 1 ? "Suspected Overlap" : "Card Charge — Verify",
-            signal: d.count > 1 ? `${d.count} separate recurring card charges — check for overlap` : `Recurring $${d.monthly.toFixed(0)}/mo charge — confirm approval`,
-            seats: `${d.count} line(s)`,
-            annual,
-            users: [],
-            ticket: `Subject: SaaS Spend Review — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo. Confirm departmental approval and check for duplicate accounts.`
-          };
-        });
-        if (csvFindings.length > 0) {
-          if (state.isDemo) {
-            state.spend = csvFindings;
-            state.shadow = [];
-            state.totalUsers = 0;
-            state.isDemo = false;
-            state.workspaceName = `Card Spend Audit — ${file.name}`;
-            document.getElementById("workspaceInput").value = state.workspaceName;
-          } else {
-            state.spend = [...csvFindings, ...state.spend];
-          }
-          state.modeLabel = "Uploaded Card CSV Audit";
-          render();
-        }
-      };
-      reader.readAsText(file);
+    function copySetupScript() {
+      const script = `# Run in Azure Cloud Shell (az login)
+$AppName = "ZeroWaste-IT-ReadOnly-Audit"
+$TenantId = (az account show --query tenantId -o tsv)
+$AppId = (az ad app create --display-name $AppName --query appId -o tsv)
+az ad sp create --id $AppId | Out-Null
+az ad app permission add --id $AppId --api 00000003-0000-0000-c000-000000000000 --api-permissions df021288-bdef-4463-88db-98f22de89214=Role b0afded3-3588-46d8-8b3d-9842eff778da=Role 9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30=Role
+az ad app permission admin-consent --id $AppId
+$Secret = (az ad app credential reset --id $AppId --append --years 1 --query password -o tsv)
+Write-Host "Directory ID: $TenantId | App ID: $AppId | Secret: $Secret" -ForegroundColor Cyan`;
+      navigator.clipboard.writeText(script);
+      alert("Azure CLI setup script copied!");
     }
 
-    function openTicket(type, idx) {
-      const item = type === "spend" ? state.spend[idx] : state.shadow[idx];
-      document.getElementById("ticketContent").textContent = item.ticket;
-      document.getElementById("ticketModal").classList.add("open");
-    }
-
-    function copyTicketText() {
-      const text = document.getElementById("ticketContent").textContent;
-      navigator.clipboard.writeText(text);
-      alert("Remediation ticket copied to clipboard!");
-    }
-
-    function exportCsvReport() {
-      const rows = [["Client_Workspace", "Category", "Classification", "Vendor_or_App", "User_Name", "User_Email_UPN", "Department", "Triage_Status", "Last_SignIn", "Annual_Amount_USD"]];
-      state.spend.forEach(s => {
-        if (Array.isArray(s.users) && s.users.length > 0) {
-          const perSeatAnnual = Math.round((Number(s.annual) || 0) / s.users.length);
-          s.users.forEach(u => {
-            rows.push([state.workspaceName, "Potential License Savings", "Dormant License", s.vendor, u.name, u.upn, u.department, u.status, u.last_signin, perSeatAnnual]);
-          });
-        } else {
-          rows.push([state.workspaceName, "Card Spend Under Review", s.classification || "Needs Verification", s.vendor, "Corporate Card", "", "", s.signal, "", s.annual]);
-        }
-      });
-      state.shadow.forEach(sh => {
-        rows.push([state.workspaceName, "Shadow AI / OAuth", "OAuth Grant", sh.app, sh.user, "", "", sh.scopes, "", 0]);
+    function exportSavingsCsv() {
+      const rows = [["Tenant", "User", "UPN", "SKU", "Reason", "Monthly_Savings_USD", "Annual_Savings_USD"]];
+      state.licenses.forEach(l => {
+        rows.push([state.workspaceName, l.name, l.upn, l.sku, l.reason, l.monthly, l.monthly * 12]);
       });
       const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = "ZeroWaste-IT-Audit-Report.csv";
+      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      a.download = "ZeroWaste-IT-Savings-Audit.csv";
       a.click();
     }
 
@@ -1517,10 +596,7 @@ Connect-MgGraph -Scopes "User.ReadWrite.All", "Organization.Read.All"
       return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
     }
 
-    checkUpgradeRedirect();
-    updateRoiCalculator();
     loadSampleData();
-    initAuth();
   </script>
 </body>
 </html>
