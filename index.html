@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeroWaste IT — Automated SaaS Spend & Shadow AI Audit</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --surface: #121826;
+      --surface-2: #1a2234;
+      --border: #263147;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --blue: #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 6%; border-bottom: 1px solid var(--border);
+      background: rgba(11, 15, 23, 0.92); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(8px);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; }
+    .brand-badge { background: var(--accent); color: #042f2e; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-size: 0.85rem; }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; border: 1px solid transparent; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--accent); color: #042f2e; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--surface-2); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+    /* Hero */
+    .hero { padding: 64px 6% 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .pill {
+      display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+      background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 18px;
+    }
+    .hero h1 { font-size: clamp(2.1rem, 4vw, 3.3rem); font-weight: 800; letter-spacing: -0.03em; max-width: 850px; margin: 0 auto 16px; line-height: 1.15; }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 680px; margin: 0 auto 28px; }
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* Sandbox Container */
+    .container { max-width: 1200px; margin: 0 auto 80px; padding: 0 6%; }
+    .dashboard-shell {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+    .dash-topbar {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 16px 24px; background: var(--surface-2); border-bottom: 1px solid var(--border);
+    }
+    .dash-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .dash-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    /* KPI Grid */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; padding: 24px; }
+    .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .kpi-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .kpi-val { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em; }
+    .kpi-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .val-green { color: var(--accent); }
+    .val-red { color: var(--danger); }
+    .val-amber { color: var(--warning); }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 8px; padding: 0 24px; border-bottom: 1px solid var(--border); }
+    .tab {
+      padding: 12px 16px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer;
+      border-bottom: 2px solid transparent; transition: 0.15s;
+    }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Table */
+    .table-wrap { padding: 20px 24px 28px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .badge-high { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .badge-med { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-low { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 100;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      width: 100%; max-width: 520px; padding: 26px; box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+    }
+    .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
+    .modal p { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    .form-group input {
+      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.9rem;
+    }
+    .form-group input:focus { outline: none; border-color: var(--accent); }
+    .info-box {
+      background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; color: #bfdbfe; margin-bottom: 16px;
+    }
+    .error-msg { color: #fca5a5; font-size: 0.82rem; margin-bottom: 12px; display: none; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+    /* Ticket Drawer Output */
+    pre.ticket-box {
+      background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem;
+      white-space: pre-wrap; color: #e2e8f0; margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="brand">
+      <span class="brand-badge">ZW</span>
+      <span>ZeroWaste IT</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-outline btn-sm" onclick="loadSampleData()">Reset Demo Data</button>
+      <button class="btn btn-primary btn-sm" onclick="openConnectModal()">Connect Live Entra ID</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="pill">Read-Only Microsoft Graph + Card Spend Audit</div>
+    <h1>Stop Paying for Unused M365 Seats &amp; Unapproved Shadow AI</h1>
+    <p>Connect your Entra ID tenant in 2 minutes using strictly read-only permissions to pinpoint dormant E3/E5/Copilot licenses and risky third-party OAuth apps.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="openConnectModal()">Run Live Entra ID Scan</button>
+      <label class="btn btn-outline" style="cursor:pointer;">
+        Upload Card CSV
+        <input type="file" id="csvInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(event)" />
+      </label>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="dashboard-shell">
+      <div class="dash-topbar">
+        <div class="dash-title">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="workspaceLabel">Interactive Sandbox — Acme Logistics (240 Employees)</span>
+        </div>
+        <div class="dash-controls">
+          <button class="btn btn-outline btn-sm" onclick="exportCsvReport()">Export CFO Summary CSV</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Annualized Recoverable Waste</div>
+          <div class="kpi-val val-green" id="kpiSavings">$0</div>
+          <div class="kpi-sub" id="kpiMonthly">$0 / month recoverable</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Inactive / Zombie Licenses</div>
+          <div class="kpi-val" id="kpiSeats">0</div>
+          <div class="kpi-sub">45+ days inactive or disabled</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Shadow AI &amp; OAuth Risks</div>
+          <div class="kpi-val val-red" id="kpiShadow">0</div>
+          <div class="kpi-sub">High-privilege third-party grants</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Users Audited</div>
+          <div class="kpi-val val-amber" id="kpiUsers">240</div>
+          <div class="kpi-sub" id="scanModeSub">Sample Tenant Data</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" id="tabSpend" onclick="switchTab('spend')">License &amp; SaaS Waste (<span id="countSpend">0</span>)</div>
+        <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow AI &amp; OAuth Grants (<span id="countShadow">0</span>)</div>
+      </div>
+
+      <div class="table-wrap" id="panelSpend">
+        <table>
+          <thead>
+            <tr>
+              <th>Vendor / License SKU</th>
+              <th>Detection Signal</th>
+              <th>Affected Seats</th>
+              <th>Annual Waste</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbodySpend"></tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap" id="panelShadow" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Connected App &amp; Publisher</th>
+              <th>Consent Scope</th>
+              <th>Granted Permissions</th>
+              <th>Risk</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyShadow"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connect Live Entra ID Modal -->
+  <div class="modal-backdrop" id="connectModal">
+    <div class="modal">
+      <h3>Connect Live Microsoft Entra ID</h3>
+      <p>Credentials are used in-memory for a read-only Microsoft Graph scan and are never stored unless you save a workspace.</p>
+      <div class="info-box">
+        <strong>Required Read-Only App Permissions (Admin Consent):</strong><br/>
+        <code>User.Read.All</code> &bull; <code>AuditLog.Read.All</code> &bull; <code>Application.Read.All</code>
+      </div>
+      <div class="form-group">
+        <label>Directory (Tenant) ID</label>
+        <input type="text" id="inTenantId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+      </div>
+      <div class="form-group">
+        <label>Application (Client) ID</label>
+        <input type="text" id="inClientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+      </div>
+      <div class="form-group">
+        <label>Client Secret Value</label>
+        <input type="password" id="inClientSecret" placeholder="Enter Entra App Client Secret" />
+      </div>
+      <div class="form-group">
+        <label>Inactivity Threshold (Days)</label>
+        <input type="number" id="inInactiveDays" value="45" min="7" max="365" />
+      </div>
+      <div class="error-msg" id="scanError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeConnectModal()">Cancel</button>
+        <button class="btn btn-primary" id="btnRunScan" onclick="runLiveEntraScan()">Run Live Audit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticket Modal -->
+  <div class="modal-backdrop" id="ticketModal">
+    <div class="modal">
+      <h3>IT Remediation Ticket</h3>
+      <p>Copy and paste directly into ServiceNow, Jira, Freshservice, or your IT queue.</p>
+      <pre class="ticket-box" id="ticketContent"></pre>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="document.getElementById('ticketModal').classList.remove('open')">Close</button>
+        <button class="btn btn-primary" onclick="copyTicketText()">Copy Ticket</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://zerowaste-it-api.onrender.com";
+
+    let state = {
+      spend: [],
+      shadow: [],
+      totalUsers: 240,
+      modeLabel: "Sample Tenant Data"
+    };
+
+    const SAMPLE_DATA = {
+      totalUsers: 240,
+      modeLabel: "Sample Tenant Data",
+      spend: [
+        {
+          vendor: "Microsoft 365 E5",
+          signal: "14 licensed user(s) inactive 45+ days (6 disabled)",
+          seats: "14 @ $57/mo",
+          annual: 9576,
+          ticket: "Subject: Reclaim 14 Inactive Microsoft 365 E5 Licenses ($9,576/yr)\n\nAction: Remove or downgrade SKU in Entra Admin Center."
+        },
+        {
+          vendor: "Microsoft 365 Copilot",
+          signal: "9 licensed user(s) inactive 45+ days (2 disabled)",
+          seats: "9 @ $30/mo",
+          annual: 3240,
+          ticket: "Subject: Reclaim 9 Unused Microsoft 365 Copilot Licenses ($3,240/yr)\n\nAction: Reassign Copilot seats to active power users."
+        },
+        {
+          vendor: "ZOOM.US (Duplicate)",
+          signal: "3 separate recurring corporate card charges",
+          seats: "3 line(s)",
+          annual: 4320,
+          ticket: "Subject: Consolidate Duplicate Zoom Subscriptions ($4,320/yr)\n\nAction: Merge 3 separate departmental cards into single Enterprise billing."
+        }
+      ],
+      shadow: [
+        {
+          app: "Otter.ai Meeting Notetaker (Unverified Publisher)",
+          user: "User / Admin OAuth Consent",
+          scopes: "Calendars.Read, Mail.Read",
+          risk: "HIGH",
+          ticket: "Subject: Shadow IT Review — Otter.ai Meeting Notetaker\n\nScopes: Calendars.Read, Mail.Read\nAction: Revoke unapproved OAuth consent in Entra ID -> Enterprise Applications."
+        },
+        {
+          app: "PDF-AI-Summarizer Pro (Unverified Publisher)",
+          user: "User / Admin OAuth Consent",
+          scopes: "Files.ReadWrite.All",
+          risk: "HIGH",
+          ticket: "Subject: Shadow IT Review — PDF-AI-Summarizer Pro\n\nScopes: Files.ReadWrite.All\nAction: Revoke SharePoint/OneDrive write consent immediately."
+        }
+      ]
+    };
+
+    function render() {
+      const totalAnnual = state.spend.reduce((acc, item) => acc + (Number(item.annual) || 0), 0);
+      const totalMonthly = Math.round(totalAnnual / 12);
+
+      document.getElementById("kpiSavings").textContent = "$" + totalAnnual.toLocaleString();
+      document.getElementById("kpiMonthly").textContent = "$" + totalMonthly.toLocaleString() + " / month recoverable";
+      document.getElementById("kpiSeats").textContent = state.spend.length + " categories";
+      document.getElementById("kpiShadow").textContent = state.shadow.length;
+      document.getElementById("kpiUsers").textContent = state.totalUsers;
+      document.getElementById("scanModeSub").textContent = state.modeLabel;
+
+      document.getElementById("countSpend").textContent = state.spend.length;
+      document.getElementById("countShadow").textContent = state.shadow.length;
+
+      const tbodySpend = document.getElementById("tbodySpend");
+      tbodySpend.innerHTML = state.spend.length === 0
+        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No unused licenses or spend anomalies found.</td></tr>`
+        : state.spend.map((item, idx) => `
+          <tr>
+            <td><strong>${escapeHtml(item.vendor)}</strong></td>
+            <td style="color:var(--muted);">${escapeHtml(item.signal)}</td>
+            <td>${escapeHtml(item.seats)}</td>
+            <td class="val-green"><strong>$${Number(item.annual).toLocaleString()}/yr</strong></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openTicket('spend', ${idx})">Generate Ticket</button></td>
+          </tr>
+        `).join("");
+
+      const tbodyShadow = document.getElementById("tbodyShadow");
+      tbodyShadow.innerHTML = state.shadow.length === 0
+        ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;">No risky third-party OAuth grants detected.</td></tr>`
+        : state.shadow.map((item, idx) => {
+          const badgeClass = item.risk === "HIGH" ? "badge-high" : item.risk === "MEDIUM" ? "badge-med" : "badge-low";
+          return `
+            <tr>
+              <td><strong>${escapeHtml(item.app)}</strong></td>
+              <td style="color:var(--muted);">${escapeHtml(item.user)}</td>
+              <td><code>${escapeHtml(item.scopes)}</code></td>
+              <td><span class="badge ${badgeClass}">${escapeHtml(item.risk)}</span></td>
+              <td><button class="btn btn-outline btn-sm" onclick="openTicket('shadow', ${idx})">Revoke Ticket</button></td>
+            </tr>
+          `;
+        }).join("");
+    }
+
+    function loadSampleData() {
+      state = JSON.parse(JSON.stringify(SAMPLE_DATA));
+      document.getElementById("workspaceLabel").textContent = "Interactive Sandbox — Acme Logistics (240 Employees)";
+      render();
+    }
+
+    function switchTab(tab) {
+      document.getElementById("tabSpend").classList.toggle("active", tab === "spend");
+      document.getElementById("tabShadow").classList.toggle("active", tab === "shadow");
+      document.getElementById("panelSpend").style.display = tab === "spend" ? "block" : "none";
+      document.getElementById("panelShadow").style.display = tab === "shadow" ? "block" : "none";
+    }
+
+    function openConnectModal() {
+      document.getElementById("scanError").style.display = "none";
+      document.getElementById("connectModal").classList.add("open");
+    }
+
+    function closeConnectModal() {
+      document.getElementById("connectModal").classList.remove("open");
+    }
+
+    async function runLiveEntraScan() {
+      const tenant_id = document.getElementById("inTenantId").value.trim();
+      const client_id = document.getElementById("inClientId").value.trim();
+      const client_secret = document.getElementById("inClientSecret").value.trim();
+      const inactive_days = parseInt(document.getElementById("inInactiveDays").value, 10) || 45;
+      const errEl = document.getElementById("scanError");
+      const btn = document.getElementById("btnRunScan");
+
+      if (!tenant_id || !client_id || !client_secret) {
+        errEl.textContent = "Please enter Tenant ID, Client ID, and Client Secret.";
+        errEl.style.display = "block";
+        return;
+      }
+
+      errEl.style.display = "none";
+      btn.disabled = true;
+      btn.textContent = "Scanning Graph API (may take ~20s if waking server)...";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/scan/entra`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tenant_id, client_id, client_secret, inactive_days })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || "Entra ID scan failed.");
+        }
+
+        state.spend = data.spend || [];
+        state.shadow = data.shadow || [];
+        state.totalUsers = data.total_users || 0;
+        state.modeLabel = `Live Entra Scan (${new Date().toLocaleTimeString()})`;
+
+        document.getElementById("workspaceLabel").textContent = `Live Tenant Audit — ${tenant_id.slice(0, 8)}...`;
+        closeConnectModal();
+        render();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Run Live Audit";
+      }
+    }
+
+    function handleCsvUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const lines = evt.target.result.split(/\r?\n/).slice(1);
+        const map = {};
+        lines.forEach(line => {
+          const cols = line.split(",");
+          if (cols.length < 3) return;
+          const vendor = cols[1].replace(/["*]/g, "").trim().split(" ")[0].toUpperCase();
+          const amt = parseFloat(cols[2].replace(/[$,]/g, ""));
+          if (vendor && !isNaN(amt) && amt > 0) {
+            if (!map[vendor]) map[vendor] = { count: 0, monthly: 0 };
+            map[vendor].count += 1;
+            map[vendor].monthly += amt;
+          }
+        });
+        const csvFindings = Object.entries(map).map(([vendor, d]) => {
+          const annual = Math.round(d.monthly * 12);
+          return {
+            vendor: d.count > 1 ? `${vendor} (Duplicate)` : vendor,
+            signal: d.count > 1 ? `${d.count} separate recurring card charges` : `Recurring $${d.monthly.toFixed(0)}/mo charge`,
+            seats: `${d.count} line(s)`,
+            annual,
+            ticket: `Subject: SaaS Spend Audit — ${vendor} ($${annual.toLocaleString()}/yr)\n\nDetected ${d.count} recurring charge(s) totaling $${d.monthly.toFixed(2)}/mo.`
+          };
+        });
+        if (csvFindings.length > 0) {
+          state.spend = [...csvFindings, ...state.spend];
+          state.modeLabel = "Merged CSV + Tenant Data";
+          render();
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function openTicket(type, idx) {
+      const item = type === "spend" ? state.spend[idx] : state.shadow[idx];
+      document.getElementById("ticketContent").textContent = item.ticket;
+      document.getElementById("ticketModal").classList.add("open");
+    }
+
+    function copyTicketText() {
+      const text = document.getElementById("ticketContent").textContent;
+      navigator.clipboard.writeText(text);
+      alert("Remediation ticket copied to clipboard!");
+    }
+
+    function exportCsvReport() {
+      const rows = [["Category", "Vendor_or_App", "Signal", "Seats_or_Scopes", "Annual_Waste_USD"]];
+      state.spend.forEach(s => rows.push(["License/Spend", s.vendor, s.signal, s.seats, s.annual]));
+      state.shadow.forEach(sh => rows.push(["Shadow AI/OAuth", sh.app, sh.user, sh.scopes, 0]));
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ZeroWaste-IT-Audit-Report.csv";
+      a.click();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    loadSampleData();
+  </script>
+</body>
+</html>
