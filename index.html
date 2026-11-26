@@ -36,10 +36,6 @@
     .nav-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .nav-link { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 10px; transition: 0.15s; }
     .nav-link:hover { color: var(--text); }
-    .user-chip {
-      font-size: 0.8rem; color: var(--accent); background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35); padding: 5px 11px; border-radius: 999px;
-    }
 
     .btn {
       padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
@@ -81,6 +77,16 @@
     }
     .demo-banner strong { color: #fbbf24; text-transform: uppercase; letter-spacing: 0.04em; }
 
+    .trust-strip {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      padding: 16px 24px; background: rgba(9, 13, 22, 0.65); border-bottom: 1px solid var(--border);
+    }
+    .trust-item {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+    }
+    .trust-title { font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+    .trust-copy { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+
     .dash-topbar {
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
       padding: 16px 24px; background: var(--surface-2); border-bottom: 1px solid var(--border);
@@ -120,7 +126,6 @@
     .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.73rem; font-weight: 700; display: inline-block; }
     .badge-waste { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
     .badge-shadow { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.35); }
 
     .pricing-section { max-width: 1200px; margin: 0 auto 90px; padding: 10px 6% 0; }
     .pricing-header { text-align: center; max-width: 680px; margin: 0 auto 40px; }
@@ -150,8 +155,10 @@
       color: var(--muted); font-size: 0.83rem;
     }
     footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
     .footer-brand { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; margin-right: 6px; }
     .footer-logo { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; }
+    .footer-links { margin-top: 8px; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
 
     .modal-backdrop {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 100;
@@ -182,6 +189,10 @@
       white-space: pre-wrap; color: #e2e8f0; margin-top: 6px; max-height: 300px; overflow-y: auto;
     }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+
+    @media (max-width: 820px) {
+      .trust-strip { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -196,7 +207,7 @@
       <a href="#audit" class="nav-link">Spend Audit</a>
       <a href="#pricing" class="nav-link">Pricing</a>
       <button class="btn btn-outline btn-sm" onclick="loadSampleData()">Reset Demo</button>
-      <button class="btn btn-primary btn-sm" onclick="openConnectModal()">Run M365 Spend Scan</button>
+      <a href="#pricing" class="btn btn-primary btn-sm">Start Plan</a>
     </div>
   </nav>
 
@@ -221,6 +232,21 @@
           <strong>Sample Tenant Sandbox:</strong> Displayed company ("Acme Logistics Group"), licenses, and Shadow IT apps are simulated demo data. Connect a Microsoft 365 tenant to scan live data.
         </div>
         <button class="btn btn-outline btn-sm" onclick="openConnectModal()">Connect M365 Tenant</button>
+      </div>
+
+      <div class="trust-strip" aria-label="Security and architecture highlights">
+        <div class="trust-item">
+          <div class="trust-title">1. Zero Write Permissions</div>
+          <div class="trust-copy">Uses read-only Microsoft Graph scopes (<code>User.Read.All</code>, <code>AuditLog.Read.All</code>, <code>Application.Read.All</code>)—no license changes from the scan.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-title">2. Ephemeral Credentials</div>
+          <div class="trust-copy">Your Entra ID client secret stays in memory for the scan only and is never stored in our database.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-title">3. Safe Remediation</div>
+          <div class="trust-copy">Generates dry-run (<code>-WhatIf</code>) PowerShell scripts so your team reviews and executes license changes locally.</div>
+        </div>
       </div>
 
       <div class="dash-topbar">
@@ -305,7 +331,7 @@
         <div>
           <div class="plan-name">Starter</div>
           <div class="plan-desc">For single-tenant IT teams auditing Microsoft 365 license spend.</div>
-          <div class="plan-price">$99<span>/mo</span></div>
+          <div class="plan-price">$79<span>/mo</span></div>
           <div class="plan-roi">Up to 500 directory users</div>
           <ul class="plan-features">
             <li>Disabled &amp; inactive M365 license detection</li>
@@ -314,7 +340,7 @@
             <li>CSV savings &amp; audit export</li>
           </ul>
         </div>
-        <button class="btn btn-outline btn-block" onclick="openConnectModal()">Run Starter Audit</button>
+        <a href="https://buy.stripe.com/3cIbJ08472Le3dt4frfnO00" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-block">Start Starter Plan ($79/mo)</a>
       </div>
 
       <div class="plan-card featured">
@@ -322,7 +348,7 @@
         <div>
           <div class="plan-name">Growth</div>
           <div class="plan-desc">For mid-sized organizations with multi-department SaaS &amp; M365 seats.</div>
-          <div class="plan-price">$249<span>/mo</span></div>
+          <div class="plan-price">$199<span>/mo</span></div>
           <div class="plan-roi">Up to 2,500 directory users</div>
           <ul class="plan-features">
             <li>Everything in Starter</li>
@@ -331,7 +357,7 @@
             <li>Priority onboarding &amp; support</li>
           </ul>
         </div>
-        <button class="btn btn-primary btn-block" onclick="openConnectModal()">Run Growth Audit</button>
+        <a href="https://buy.stripe.com/7sY00idor99CaFVbHTfnO01" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-block">Start Growth Plan ($199/mo)</a>
       </div>
 
       <div class="plan-card">
@@ -347,7 +373,7 @@
             <li>Direct partner support</li>
           </ul>
         </div>
-        <button class="btn btn-outline btn-block" onclick="openConnectModal()">Run MSP Audit</button>
+        <a href="https://buy.stripe.com/8x2aEWfwz99C15leU5fnO02" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-block">Start MSP Plan ($499/mo)</a>
       </div>
     </div>
   </section>
@@ -357,8 +383,12 @@
       <img src="zerowaste-logo.jpg" alt="" class="footer-logo" onerror="this.style.display='none';" />
       <strong>ZeroWaste IT</strong>
     </span>
-    &copy; 2026 ProfitHarbor AI &bull; Read-Only Microsoft 365 License &amp; Shadow IT Spend Auditing &bull;
-    Support: <a href="mailto:support@profitharborai.com">support@profitharborai.com</a>
+    &copy; 2026 ProfitHarbor AI &bull; Read-Only Microsoft 365 License &amp; Shadow IT Spend Auditing
+    <div class="footer-links">
+      <a href="https://profitharborai.com" target="_blank" rel="noopener noreferrer">ProfitHarbor AI Hub</a>
+      <a href="https://profitharborai.com/products.html" target="_blank" rel="noopener noreferrer">All Products</a>
+      <a href="mailto:support@profitharborai.com">support@profitharborai.com</a>
+    </div>
   </footer>
 
   <!-- Connect Modal -->
