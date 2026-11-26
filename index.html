@@ -6,7 +6,6 @@
   <title>ZeroWaste IT — Automated Microsoft 365 &amp; Shadow IT Spend Audit</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23090d16'/%3E%3Cpath d='M32 8L12 16v15c0 13.5 8.5 25.8 20 30 11.5-4.2 20-16.5 20-30V16L32 8z' fill='none' stroke='%2310b981' stroke-width='4.5'/%3E%3Ctext x='32' y='39' font-family='Arial,sans-serif' font-weight='900' font-size='20' fill='%23f8fafc' text-anchor='middle'%3EZW%3C/text%3E%3C/svg%3E" />
   <link rel="shortcut icon" type="image/jpeg" href="zerowaste-logo.jpg?v=2" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #090d16;
@@ -263,17 +262,17 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Est. Annual Savings</div>
-          <div class="kpi-val val-green" id="kpiAnnual">$0</div>
-          <div class="kpi-sub" id="kpiMonthly">$0 / month recoverable</div>
+          <div class="kpi-val val-green" id="kpiAnnual">$2,112</div>
+          <div class="kpi-sub" id="kpiMonthly">$176 / month recoverable</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Reclaimable Licenses</div>
-          <div class="kpi-val val-red" id="kpiWasteSeats">0</div>
+          <div class="kpi-val val-red" id="kpiWasteSeats">5</div>
           <div class="kpi-sub">Disabled or inactive 60+ days</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Shadow IT Apps</div>
-          <div class="kpi-val val-amber" id="kpiShadowApps">0</div>
+          <div class="kpi-val val-amber" id="kpiShadowApps">3</div>
           <div class="kpi-sub">Third-party OAuth apps detected</div>
         </div>
         <div class="kpi-card">
@@ -284,8 +283,8 @@
       </div>
 
       <div class="tabs">
-        <div class="tab active" id="tabLicenses" onclick="switchTab('licenses')">Unused &amp; Disabled Licenses (<span id="countLicenses">0</span>)</div>
-        <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow IT &amp; OAuth Apps (<span id="countShadow">0</span>)</div>
+        <div class="tab active" id="tabLicenses" onclick="switchTab('licenses')">Unused &amp; Disabled Licenses (<span id="countLicenses">5</span>)</div>
+        <div class="tab" id="tabShadow" onclick="switchTab('shadow')">Shadow IT &amp; OAuth Apps (<span id="countShadow">3</span>)</div>
       </div>
 
       <div class="table-wrap" id="panelLicenses">
